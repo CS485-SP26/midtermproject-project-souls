@@ -29,9 +29,9 @@ namespace Character {
 
         public virtual void Jump() { /* NO JUMP SUPPORT */ }
 
-        public virtual float GetHorizontalSpeedPercent()
+        public virtual Vector2 GetMovementVector()
         {
-            return moveInput == Vector2.zero ? 0f : 1f;
+            return Vector2.ClampMagnitude(new Vector2(rb.linearVelocity.x, rb.linearVelocity.z) / maxVelocity, 1f);
         }
 
         protected virtual void FixedUpdate()

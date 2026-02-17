@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Farming;
 
@@ -16,6 +17,13 @@ namespace Character
                 activeTile = tile;
                 activeTile?.SetHighlight(true);
             }
+        }
+        
+        // Inside TileSelector.cs
+        public virtual void SetSelectedTiles(List<FarmTile> tiles) 
+        {
+            // Default implementation: maybe just pick the first one?
+            if(tiles.Count > 0) SetActiveTile(tiles[0]);
         }
     }
 }

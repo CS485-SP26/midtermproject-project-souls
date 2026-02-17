@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Art.UI.ProgressBar;
 using UnityEngine;
 using UnityEditor;
 using Environment;
@@ -14,10 +15,14 @@ namespace Farming
         [SerializeField] private float tileGap = 0.1f;
         private List<FarmTile> tiles = new List<FarmTile>();
         
+        public SimpleProgressBar progressBar;
+        private int tileCount = 0;
+        
         void Start()
         {
             Debug.Assert(farmTilePrefab, "FarmTileManager requires a farmTilePrefab");
             Debug.Assert(dayController, "FarmTileManager requires a dayController");
+            UpdateProgressBar();
         }
 
         void OnEnable()
@@ -47,6 +52,21 @@ namespace Farming
             }
         }
 
+        public void UpdateProgressBar()
+        {
+            int readyCount = 0;
+            foreach (FarmTile farmTile in tiles)
+            {
+                if(farmTile.GetCondition == FarmTile.Condition.Watered)
+                {
+                    readyCount++;
+                }
+            }
+            
+            progressBar.SetProgress(readyCount, 0, tiles.Count);
+            
+        }
+
         void InstantiateTiles()
         {
             Vector3 spawnPos = transform.position;
@@ -66,6 +86,8 @@ namespace Farming
                 spawnPos.z += clone.transform.localScale.z + tileGap;
                 spawnPos.x = transform.position.x;
             }
+            
+            
         }
 
         // ***************************************************************** //

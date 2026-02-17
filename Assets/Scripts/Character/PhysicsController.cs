@@ -1,271 +1,216 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-// TODO: Consider the benefits of refactoring to namespace Movement
 namespace Character
 {
-    
-    
-    public class PhysicsMovement : MovementController
+    [RequireComponent(typeof(Rigidbody))]
+    public class PhysicsController : MovementController
     {
+        #region 1. Settings & State
         
-        struct PlayerState
+        [Header("Movement Settings")]
+        [SerializeField] private float speed = 10.0f;
+        [SerializeField] private float maxSpeed = 5.0f;
+        [SerializeField] private float rotationSpeed = 15.0f; // New: Controls how fast they turn
+        [SerializeField] private float movementDrag = 0.5f;
+
+        [Header("Jump Settings")]
+        [SerializeField] private float jumpForce = 5.0f;
+        [SerializeField] private int maxJumps = 2;
+
+        // Internal State Structures
+        private struct InputState
         {
-            public Vector3 position;
-            public Quaternion rotation;
-            public Vector3 linearVelocity;
-            public Vector3 angularVelocity;
+            public Vector2 moveInput; // WASD
+            public bool jumpInput;    // Space
         }
-    
-    
-        struct InputState
+
+        private struct JumpState
         {
-            public Vector2 moveInput;
-            public Vector2 rotateInput;
-            public bool jumpInput;
-        }
-    
-        struct JumpState
-        {
-            public bool canJump;
-            public bool inAir;
+            public bool isGrounded;
             public bool onWall;
             public Vector3 wallNormal;
-            public int jumpCount;
+            public int jumpsRemaining;
             public float lastJumpTime;
         }
-        
-        
-        [SerializeField] float movementDrag = 0.5f;
-        [SerializeField] float mouseSensitivity = 0.1f;
-        [SerializeField] private float maxSpeed = 5.0f;
-        [SerializeField] private float speed = 10.0f;
-        [SerializeField] private float jumpForce = 5.0f;
 
+        private InputState _input;
+        private JumpState _jumpState;
         
-        // Movement Input
-        private InputState playerInputState = new InputState()
-        {
-            moveInput = Vector2.zero,
-            rotateInput = Vector2.zero,
-            jumpInput = false
-        };
-        
-        // Player State
-        private PlayerState playerState = new PlayerState
-        {
-            position = Vector3.zero,
-            rotation = Quaternion.identity,
-            linearVelocity = Vector3.zero,
-            angularVelocity = Vector3.zero
-        };
-        
-        // Jump State
-        private JumpState jumpState = new JumpState
-        {
-            canJump = true,
-            inAir = false,
-            onWall = false,
-            wallNormal = Vector3.zero,
-            jumpCount = 2
-        };
-        
+        #endregion
+
+        #region 2. Unity Lifecycle
+
         protected override void Start()
         {
             base.Start();
+            
             rb.linearDamping = movementDrag;
-        }
+            rb.freezeRotation = true; // Physics shouldn't rotate player, our code will.
 
-        public override float GetHorizontalSpeedPercent()
-        {
-            Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-            return Mathf.Clamp01(horizontalVelocity.magnitude / maxVelocity);;
+            _jumpState.jumpsRemaining = maxJumps;
+            _jumpState.isGrounded = true;
         }
-
-        public override void Jump() 
-        { 
-            playerInputState.jumpInput = true;
-        }
-
-        public override void Move(Vector2 input)
-        {
-            playerInputState.moveInput = input;
-        }
-        
 
         protected override void FixedUpdate()
         {
-            ApplyMovement();
+            // 1. Movement & Rotation
+            HandleMovement();
+            
+            // 2. Physics Cleanup
             ClampVelocity();
-            ApplyRotation();
-            ApplyJump();
-            UpdatePlayerState();
-        }
-        
-        void ApplyMovement()
-        {
-            ProcessMovementInput();
+            ApplyDrag();
+            
+            // 3. Actions
+            HandleJump();
         }
 
-        void ApplyJump()
+        #endregion
+
+        #region 3. Input Handling (Public API)
+
+        public override void Move(Vector2 input)
         {
-            ProcessJumpInput();
+            _input.moveInput = input;
         }
 
-        void OnCollisionEnter(Collision collision)
+        public override void Jump()
         {
-            if (collision.gameObject.CompareTag("Ground"))
+            _input.jumpInput = true;
+        }
+
+        // Only used for Animation logic now
+        public Vector2 GetHorizontalSpeedPercent()
+        {
+            Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            return new Vector2(horizontalVelocity.magnitude / maxSpeed, 0); 
+        }
+
+        #endregion
+
+        #region 4. Movement Logic
+
+        private void HandleMovement()
+        {
+            // Get raw input direction (World Space)
+            // WASD directly maps to X/Z direction
+            Vector3 targetDir = new Vector3(_input.moveInput.x, 0, _input.moveInput.y);
+
+            // 1. Handle Rotation
+            // Only rotate if we are actually moving
+            if (targetDir.sqrMagnitude > 0.01f)
             {
-                jumpState.canJump = true;
-                jumpState.inAir = false;
-                jumpState.onWall = false;
-                jumpState.jumpCount = 2;
+                // Calculate target rotation (Face the direction we are pressing)
+                Quaternion targetRotation = Quaternion.LookRotation(targetDir, Vector3.up);
+                
+                // Smoothly rotate towards it
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
             }
-            else
+
+            // 2. Apply Movement Force
+            if (targetDir.sqrMagnitude > 0.01f)
             {
-                jumpState.inAir = true;
+                rb.AddForce(targetDir * speed, ForceMode.Acceleration);
             }
-
         }
-        
-        
-        void OnCollisionStay(Collision collision)
-        {
 
-            if (Time.time < jumpState.lastJumpTime + 0.2f) return;
-            
-            ContactPoint contact = collision.GetContact(0);
-            Vector3 collisionNormal = contact.normal.normalized;
-            Vector3 v = rb.linearVelocity;
-            
-            
-            if (Vector3.Dot(collisionNormal, Vector3.up) < .2)
+        private void HandleJump()
+        {
+            if (_input.jumpInput)
             {
-                var dotProd = Vector3.Dot(v, collisionNormal);
-                if (dotProd < 0)
+                if (_jumpState.jumpsRemaining > 0)
                 {
-                    var slide = v - (dotProd * collisionNormal);
-                    rb.linearVelocity = slide;
+                    PerformJump();
                 }
-                
-                jumpState.inAir = false;
-                jumpState.onWall = true;
-                jumpState.wallNormal = collisionNormal;
-                jumpState.canJump = true;
-                
-            }
-            else
-            {
-                jumpState.onWall = false;
-            }
-
-        }
-
-        void OnCollisionExit(Collision collision)
-        {
-            if(jumpState.onWall)
-            {
-                jumpState.onWall = false;
+                _input.jumpInput = false;
             }
         }
-        
-        void ClampVelocity()
+
+        private void PerformJump()
         {
-            // Clamp horizontal velocity while preserving vertical (for jumping/falling)
+            _jumpState.lastJumpTime = Time.time;
+            _jumpState.jumpsRemaining--;
+            _jumpState.isGrounded = false;
+
+            // Reset vertical velocity for consistent jump height
+            Vector3 currentVel = rb.linearVelocity;
+            currentVel.y = 0;
+            rb.linearVelocity = currentVel;
+
+            // Calculate Direction (Standard Up or Wall Bounce)
+            Vector3 jumpDir = Vector3.up;
+
+            if (_jumpState.onWall)
+            {
+                jumpDir = (Vector3.up + (_jumpState.wallNormal * 2.0f)).normalized;
+                _jumpState.onWall = false; 
+            }
+
+            rb.AddForce(jumpDir * jumpForce, ForceMode.Impulse);
+        }
+
+        #endregion
+
+        #region 5. Physics Corrections
+
+        private void ClampVelocity()
+        {
             Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             
-            if (horizontalVelocity.magnitude > maxVelocity)
+            if (horizontalVelocity.magnitude > maxSpeed)
             {
-                horizontalVelocity = horizontalVelocity.normalized * maxVelocity;
+                horizontalVelocity = horizontalVelocity.normalized * maxSpeed;
                 rb.linearVelocity = new Vector3(horizontalVelocity.x, rb.linearVelocity.y, horizontalVelocity.z);
             }
         }
 
-        void ApplyRotation()
+        private void ApplyDrag()
         {
-            ProcessRotationInput();
-        }
-        
-        private Vector3 GetOrientedMovement(Vector2 input)
-        {
-            // Create movement direction vector
-            Vector3 inputDir = new Vector3(input.x, 0, input.y);
-            
-            // Rotate movement direction based on player orientation
-            inputDir = transform.TransformDirection(inputDir);
-            inputDir.Normalize();
-            
-            return inputDir;
-        }
-        
-        private void ProcessMovementInput()
-        {
-            // Create movement direction vector
-            Vector3 inputDir = GetOrientedMovement(playerInputState.moveInput);
-            
-            // Apply movement force to the Rigidbody
-            rb.AddForce(inputDir*speed, ForceMode.Acceleration);
-            
-            // Slow down the player when no input is given (on the ground)
-            if (playerInputState.moveInput.magnitude < .1f && !jumpState.inAir)
+            // Apply extra friction when stopping to prevent "sliding on ice" feel
+            if (_jumpState.isGrounded && _input.moveInput.magnitude < 0.1f)
             {
-                // Apply drag when no input is given
-                rb.linearVelocity *= (1 - movementDrag);
+                rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, Vector3.zero, Time.fixedDeltaTime * 5f);
             }
         }
-        
-        private void ProcessJumpInput()
+
+        #endregion
+
+        #region 6. Collision & Ground Detection
+
+        private void OnCollisionEnter(Collision collision) => EvaluateCollision(collision);
+        private void OnCollisionStay(Collision collision) => EvaluateCollision(collision);
+        private void OnCollisionExit(Collision collision)
         {
-            // Handle jumping
-            if (playerInputState.jumpInput && jumpState.canJump && jumpState.jumpCount > 0)
+            _jumpState.isGrounded = false;
+            _jumpState.onWall = false;
+        }
+
+        private void EvaluateCollision(Collision collision)
+        {
+            if (Time.time < _jumpState.lastJumpTime + 0.1f) return;
+
+            foreach (ContactPoint contact in collision.contacts)
             {
+                Vector3 normal = contact.normal;
+
+                // FLOOR CHECK
+                if (Vector3.Dot(normal, Vector3.up) > 0.7f)
+                {
+                    _jumpState.isGrounded = true;
+                    _jumpState.onWall = false;
+                    _jumpState.jumpsRemaining = maxJumps;
+                    return; 
+                }
                 
-                jumpState.lastJumpTime = Time.time;
-                if (!jumpState.onWall)
+                // WALL CHECK
+                if (Vector3.Dot(normal, Vector3.up) < 0.1f)
                 {
-                    jumpState.jumpCount--;
-                    rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                    playerInputState.jumpInput = false; // Reset jump input after applying force
-                    jumpState.canJump = false; // Prevent further jumps until grounded
-                    jumpState.inAir = true;
-                }
-                else
-                {
-                    jumpState.jumpCount--;
-                    rb.AddForce((Vector3.up + (jumpState.wallNormal*2.0f)) * jumpForce, ForceMode.Impulse);
-                    playerInputState.jumpInput = false; // Reset jump input after applying force
-                    jumpState.canJump = false; // Prevent further jumps until grounded
-                    jumpState.inAir = true;
-                    jumpState.onWall = false;
+                    _jumpState.onWall = true;
+                    _jumpState.wallNormal = normal;
+                    _jumpState.jumpsRemaining = Mathf.Max(_jumpState.jumpsRemaining, 1);
                 }
             }
         }
 
-        private void ProcessRotationInput()
-        {
-            // Rotate left/right by rotating the player object
-            transform.Rotate(0.0f, playerInputState.rotateInput.x, 0.0f);
-            
-            // Look up/down by rotating the camera child object
-            Transform cameraTransform = transform.GetChild(0);
-            cameraTransform.Rotate(-playerInputState.rotateInput.y, 0.0f, 0.0f);
-            
-            // Clamp camera rotation to avoid flipping
-            Vector3 cameraEuler = cameraTransform.localEulerAngles;
-            if (cameraEuler.x > 180) cameraEuler.x -= 360; // Convert to -180 to 180 range
-            cameraEuler.x = Mathf.Clamp(cameraEuler.x, -80, 80);
-            cameraTransform.localEulerAngles = cameraEuler;
-            
-            playerInputState.rotateInput = Vector2.zero; // Reset rotation input after applying
-            rb.angularVelocity = Vector3.zero;
-        }
-
-        private void UpdatePlayerState()
-        {
-            playerState.position = transform.position;
-            playerState.rotation = transform.rotation;
-            playerState.linearVelocity = rb.linearVelocity;
-            playerState.angularVelocity = rb.angularVelocity;
-        }
+        #endregion
     }
 }

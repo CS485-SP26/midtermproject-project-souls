@@ -16,6 +16,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "de3d22f1-b7a3-42e7-a86d-34627e8b9a01",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Move",
                     "type": "Value",
                     "id": "d434ae2f-ecb9-4d6f-8f21-62153bacb2fb",
@@ -47,6 +56,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "d448d958-41a0-47e4-b9da-e8ea202ab54b",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "2D Vector",
                     "id": "9ab0b9d2-bc59-46bd-820b-a6df603e635e",
                     "path": "2DVector",
@@ -69,7 +89,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "down",
+                    "name": "Down",
                     "id": "38c4ec8b-b19e-4bd5-87fe-bca111647c2e",
                     "path": "<Keyboard>/s",
                     "interactions": "",

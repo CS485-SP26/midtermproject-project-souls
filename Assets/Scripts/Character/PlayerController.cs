@@ -1,26 +1,26 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Farming;
 
 namespace Character 
 {
-    [RequireComponent(typeof(PlayerInput))] // Input is required and we don't store a reference
+    [RequireComponent(typeof(PlayerInput))]
+    [RequireComponent(typeof(PlayerFarming))] // Ensure the farming script is attached
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private TileSelector tileSelector;
-        MovementController moveController;
-        AnimatedController animatedController;
+        private MovementController moveController;
+        private AnimatedController animatedController;
+        private PlayerFarming playerFarming;
 
         void Start()
         {
             moveController = GetComponent<MovementController>();
             animatedController = GetComponent<AnimatedController>();
+            playerFarming = GetComponent<PlayerFarming>();
 
-            // TODO: Consider Debug.Assert vs RequireComponent(typeof(...))
-            Debug.Assert(animatedController, "PlayerController requires an animatedController");
             Debug.Assert(moveController, "PlayerController requires a MovementController");
-            Debug.Assert(tileSelector, "PlayerController requires a TileSelector.");
+            Debug.Assert(playerFarming, "PlayerController requires PlayerFarming script");
         }
+
         public void OnMove(InputValue inputValue)
         {
             Vector2 inputVector = inputValue.Get<Vector2>();
@@ -30,21 +30,13 @@ namespace Character
         public void OnJump(InputValue inputValue)
         {
             moveController.Jump();
+            if(animatedController) animatedController.Jump();
         }
-
+        
         public void OnInteract(InputValue value)
         {
-            FarmTile tile = tileSelector.GetSelectedTile();
-            if (tile != null)
-            {
-                tile.Interact(); // updates the condition, play the anim after
-                switch (tile.GetCondition)
-                {
-                    case FarmTile.Condition.Tilled: animatedController.SetTrigger("Till"); break;
-                    case FarmTile.Condition.Watered: animatedController.SetTrigger("Water"); break;
-                    default: break;
-                }
-            }
+            // Delegate the logic to the farming script
+            playerFarming.AttemptInteraction();
         }
     }
 }

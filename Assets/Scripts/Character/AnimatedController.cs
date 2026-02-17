@@ -14,6 +14,11 @@ namespace Character {
             moveController = GetComponent<MovementController>();
         }
 
+        public void Jump()
+        {
+            animator.SetTrigger("Jump");
+        }
+        
         public void SetTrigger(string name)
         {
             animator.SetTrigger(name);
@@ -21,8 +26,10 @@ namespace Character {
 
         void Update()
         {
-            moveSpeed = moveController.GetHorizontalSpeedPercent();
-            animator.SetFloat("Speed", moveSpeed);
+            moveSpeed = moveController.GetMovementVector().magnitude;
+            animator.SetFloat("InputX", moveController.GetMovementVector().x);
+            animator.SetFloat("InputY", moveController.GetMovementVector().y);
+            
         }
     }
 }
