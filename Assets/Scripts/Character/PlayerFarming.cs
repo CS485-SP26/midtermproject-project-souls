@@ -1,6 +1,8 @@
 using Art.UI.ProgressBar;
 using UnityEngine;
 using Farming;
+using TMPro;
+using Core;
 
 namespace Character
 {
@@ -22,6 +24,9 @@ namespace Character
         [SerializeField] private int maxWaterLevel = 10;
         [SerializeField] private int currentWaterLevel = 10;
 
+        [Header("Funds")]
+        [SerializeField] private TMP_Text fundsText;
+
         private GameObject currentToolInstance;
 
         private void Start()
@@ -30,6 +35,7 @@ namespace Character
             
             // Initialize UI
             UpdateWaterUI();
+            fundsText.text = "Funds: $" + GameManager.Instance.GetFunds();
         }
 
         public void AttemptInteraction()
