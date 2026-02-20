@@ -12,6 +12,7 @@ namespace Character
         [SerializeField] private float maxSpeed = 5.0f;
         [SerializeField] private float rotationSpeed = 15.0f; // New: Controls how fast they turn
         [SerializeField] private float movementDrag = 0.5f;
+        [SerializeField] private bool customForwardDirection = false; // If true, forward is based on camera direction instead of world forward
 
         [Header("Jump Settings")]
         [SerializeField] private float jumpForce = 5.0f;
@@ -95,6 +96,16 @@ namespace Character
             // WASD directly maps to X/Z direction
             Vector3 targetDir = new Vector3(_input.moveInput.x, 0, _input.moveInput.y);
 
+            // Check if we want to use camera-relative movement
+            if (customForwardDirection)
+            {                
+                Vector3 cameraForward = Camera.main.transform.forward;
+                cameraForward.y = 0; // Flatten to horizontal plane
+                cameraForward.Normalize();
+                Vector3 cameraRight = Vector3.Cross(Vector3.up, cameraForward);
+                targetDir = (cameraRight * _input.moveInput.x) + (cameraForward * _input.moveInput.y);
+            }
+            
             // 1. Handle Rotation
             // Only rotate if we are actually moving
             if (targetDir.sqrMagnitude > 0.01f)
