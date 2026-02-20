@@ -7,99 +7,63 @@ namespace Character
     public class PlayerFarming : MonoBehaviour
     {
         [Header("Dependencies")]
-        [SerializeField] private TileSelector tileSelector;
+        //[SerializeField] private TileSelector tileSelector;
         [SerializeField] private FarmTileManager farmTileManager;
         private AnimatedController animatedController;
 
         [Header("Tools & Visuals")]
-        [SerializeField] private GameObject wateringCanMesh;
-        [SerializeField] private GameObject handAttachmentPoint;
-        [SerializeField] private GameObject hoeMesh;
-        [SerializeField] private GameObject hoeHandAttachmentPoint;
+        [SerializeField] private GameObject waterCan;
+        [SerializeField] private GameObject gardenHoe;
 
         [Header("Water Stats")]
-        [SerializeField] private SimpleProgressBar waterLevelBar;
-        [SerializeField] private int maxWaterLevel = 10;
-        [SerializeField] private int currentWaterLevel = 10;
-
-        private GameObject currentToolInstance;
+        [SerializeField] private DepletingBar waterLevelUI; //eventually refactor this to water can
+        [SerializeField] private float waterLevel = 1f;
+        [SerializeField] private float waterPerUse = 0.2f;
 
         private void Start()
         {
             animatedController = GetComponent<AnimatedController>();
-            
-            // Initialize UI
-            UpdateWaterUI();
+
+            SetTool("None");
+            waterLevelUI.SetFill(waterLevel);
         }
 
-        public void AttemptInteraction()
+        public void AttemptInteraction(FarmTile tile)
         {
-            FarmTile tile = tileSelector.GetSelectedTile();
             if (tile == null) return;
 
-            if (tile.GetCondition == FarmTile.Condition.Grass)
+            switch (tile.GetCondition)
             {
-                EquipTool(hoeMesh, hoeHandAttachmentPoint);
-                animatedController.SetTrigger("Till");
-            }
-            else if (tile.GetCondition == FarmTile.Condition.Tilled)
-            {
-                if (currentWaterLevel <= 0)
-                {
-                    Debug.Log("Not enough water!");
-                    return;
-                }
+                case FarmTile.Condition.Grass: 
+                    animatedController.SetTrigger("Till"); 
+                    tile.Interact();
+                    break;
+                case FarmTile.Condition.Tilled: 
+                    if(waterLevel >= waterPerUse)
+                    {
+                        animatedController.SetTrigger("Water"); 
+                        tile.Interact();
+                        waterLevel -= waterPerUse;
+                        waterLevelUI.SetFill(waterLevel);
+                    }
+                    break;
 
-                EquipTool(wateringCanMesh, handAttachmentPoint);
-                animatedController.SetTrigger("Water");
+                default: break;
             }
-
-            // Update global manager (if needed immediately on click)
-            if(farmTileManager) farmTileManager.UpdateProgressBar();
         }
 
-        private void EquipTool(GameObject toolPrefab, GameObject attachPoint)
+        public void SetTool(string tool)
         {
-            // Clean up old tool
-            if (currentToolInstance != null) Destroy(currentToolInstance);
+            //want to make sure our tools are inactive by default
+            waterCan.SetActive(false);
+            gardenHoe.SetActive(false);
 
-            // Create new tool
-            currentToolInstance = Instantiate(toolPrefab, attachPoint.transform);
-            currentToolInstance.transform.localPosition = Vector3.zero;
-            currentToolInstance.transform.localRotation = Quaternion.identity;
-        }
-
-        private void UpdateWaterUI()
-        {
-            if (waterLevelBar != null)
+            switch(tool)
             {
-                waterLevelBar.SetProgress(currentWaterLevel, 0, maxWaterLevel);
+                case "GardenHoe": gardenHoe.gameObject.SetActive(true); break;
+                case "WaterCan": waterCan.gameObject.SetActive(true); break;
             }
-        }
 
-        // ---------------------------------------------------------
-        // ANIMATION EVENT RECEIVERS
-        // These function names match the strings called by your Animation Events
-        // ---------------------------------------------------------
-
-        public void WaterTile()
-        {
-            FarmTile tile = tileSelector.GetSelectedTile();
-            if (tile != null)
-            {
-                tile.Water();
-                currentWaterLevel--;
-                UpdateWaterUI();
-            }
-        }
-
-        public void TillTile()
-        {
-            FarmTile tile = tileSelector.GetSelectedTile();
-            if (tile != null)
-            {
-                tile.Till();
-            }
-        }
+        }    
     }
 }

@@ -27,7 +27,7 @@ namespace Character {
         void Update()
         {
             moveSpeed = moveController.GetMovementVector().magnitude;
-            animator.SetFloat("InputX", moveController.GetMovementVector().x);
+            animator.SetFloat("InputX", moveController.GetMovementVector().x * 2);
             animator.SetFloat("InputY", moveController.GetMovementVector().y);
             
         }
