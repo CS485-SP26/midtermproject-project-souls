@@ -1832,6 +1832,7 @@ MonoBehaviour:
   waterLevelBar: {fileID: 2035520636}
   maxWaterLevel: 10
   currentWaterLevel: 10
+  fundsText: {fileID: 1453413617}
 --- !u!1 &471848327
 GameObject:
   m_ObjectHideFlags: 0
