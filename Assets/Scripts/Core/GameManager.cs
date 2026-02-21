@@ -23,26 +23,9 @@ namespace Core
             }
         }
 
-        private FundsData funds = new FundsData(10);
-        public FundsData Funds => funds;
+        [SerializeField] private FundsManager fundsManager;
 
-        public void AddFunds(int amount) => funds.Add(amount);
-        public int GetFunds() => funds.Get();
-
-        public struct FundsData
-        {
-            private int amount;
-
-            public FundsData(int startingAmount)
-            {
-                amount = startingAmount;
-            }
-
-            public int Amount => amount;
-            public void Add(int value) => amount += value;
-            public int Get() => amount;
-            public void Set(int value) => amount = value;
-        }
+        public FundsManager Funds => fundsManager;
 
 
         void Awake()
@@ -53,6 +36,11 @@ namespace Core
                 // multiple instancing
                 instance = this; 
                 DontDestroyOnLoad(this);
+                
+                if (fundsManager == null)
+                    fundsManager = GetComponent<FundsManager>();
+
+                fundsManager.Initialize(10);
                 Debug.Log("GameManager set through Awake");
             }
             else
@@ -61,6 +49,9 @@ namespace Core
                 Destroy(this);
             }
         }
+
+        public void AddFunds(int amount) => fundsManager.Add(amount);
+        public int GetFunds() => fundsManager.Get();
 
         public void LoadScenebyName(string name)
         {

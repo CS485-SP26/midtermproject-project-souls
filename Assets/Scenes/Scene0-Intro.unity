@@ -365,6 +365,7 @@ GameObject:
   m_Component:
   - component: {fileID: 621266011}
   - component: {fileID: 621266010}
+  - component: {fileID: 621266012}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -384,6 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550bb88b207175a489376f2e8459d91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadScene
+  fundsManager: {fileID: 0}
 --- !u!4 &621266011
 Transform:
   m_ObjectHideFlags: 0
@@ -399,6 +401,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &621266012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621266009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 637674fc4682f4db68f436542fb4e74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FundsManager
 --- !u!1 &644770500
 GameObject:
   m_ObjectHideFlags: 0
