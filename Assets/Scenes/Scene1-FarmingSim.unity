@@ -1942,14 +1942,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character.PlayerFarming
   farmTileManager: {fileID: 1135064477}
-  wateringCanMesh: {fileID: 919132149155446097, guid: fbd672e77a4514e479bf5aed86e3234d, type: 3}
-  handAttachmentPoint: {fileID: 805719243}
-  hoeMesh: {fileID: 1066942663620176492, guid: b491eb08a62cb3a4586bf821e6faad8f, type: 3}
-  hoeHandAttachmentPoint: {fileID: 2019827786}
-  waterLevelBar: {fileID: 2035520636}
-  maxWaterLevel: 10
-  currentWaterLevel: 10
+  waterCan: {fileID: 1403079995}
+  gardenHoe: {fileID: 843759390}
+  waterLevelBar: {fileID: 298155411}
   fundsText: {fileID: 1453413617}
+  waterLevelUI: {fileID: 2035520639}
+  waterLevel: 1
+  waterPerUse: 0.2
 --- !u!1 &471848327
 GameObject:
   m_ObjectHideFlags: 0
@@ -3623,7 +3622,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2035520635}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6021,6 +6020,51 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e2b31b68bbe16643a7e6bf7839e94ae, type: 3}
+--- !u!1 &1522850642
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1522850643}
+  - component: {fileID: 1522850644}
+  m_Layer: 0
+  m_Name: TileSelec
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1522850643
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522850642}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8754623725456459235}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1522850644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522850642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea8b537537010b4a97c1dc05a924885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Character.PointSelector
+  activeTile: {fileID: 0}
 --- !u!4 &1608999407 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8026126120854927931, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
@@ -7517,7 +7561,7 @@ PrefabInstance:
     - target: {fileID: 6765532629996999542, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: tileSelector
       value: 
-      objectReference: {fileID: 431992770}
+      objectReference: {fileID: 1522850644}
     - target: {fileID: 6765532629996999542, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: waterLevelBar
       value: 
@@ -7596,6 +7640,9 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 7858137979854337093, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 936733458958963574, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1522850643}
     - targetCorrespondingSourceObject: {fileID: 8026126120854927931, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       insertIndex: -1
       addedObject: {fileID: 805719244}
@@ -7606,10 +7653,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1809548403471960171, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       insertIndex: 6
       addedObject: {fileID: 431992761}
-    - targetCorrespondingSourceObject: {fileID: 1809548403471960171, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 431992770}
   m_SourcePrefab: {fileID: 100100000, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
+--- !u!4 &8754623725456459235 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 936733458958963574, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
+  m_PrefabInstance: {fileID: 8754623725456459234}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -7636,3 +7685,4 @@ SceneRoots:
   - {fileID: 219681625}
   - {fileID: 1465935422}
   - {fileID: 120958216}
+  - {fileID: 898196266}

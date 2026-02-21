@@ -35,7 +35,7 @@ namespace Character
             animatedController = GetComponent<AnimatedController>();
             
             // Initialize UI
-            UpdateWaterUI();
+            // UpdateWaterUI();
             fundsText.text = "Funds: $" + GameManager.Instance.GetFunds();
 
             SetTool("None");
