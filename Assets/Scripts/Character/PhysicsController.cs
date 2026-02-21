@@ -10,12 +10,14 @@ namespace Character
         [Header("Movement Settings")]
         [SerializeField] private float speed = 10.0f;
         [SerializeField] private float maxSpeed = 5.0f;
-        [SerializeField] private float rotationSpeed = 15.0f; // New: Controls how fast they turn
+        // [SerializeField] private float rotationSpeed = 15.0f; // New: Controls how fast they turn
         [SerializeField] private float movementDrag = 0.5f;
         [SerializeField] private bool customForwardDirection = false; // If true, forward is based on camera direction instead of world forward
+        [SerializeField] float drag = 0.5f;
+        [SerializeField] float rotationSpeed = 0.1f;
 
         [Header("Jump Settings")]
-        [SerializeField] private float jumpForce = 5.0f;
+        //[SerializeField] private float jumpForce = 5.0f;
         [SerializeField] private int maxJumps = 2;
 
         // Internal State Structures
@@ -45,7 +47,7 @@ namespace Character
         {
             base.Start();
             
-            rb.linearDamping = movementDrag;
+            rb.linearDamping = drag;
             rb.freezeRotation = true; // Physics shouldn't rotate player, our code will.
 
             _jumpState.jumpsRemaining = maxJumps;
@@ -80,11 +82,11 @@ namespace Character
         }
 
         // Only used for Animation logic now
-        public Vector2 GetHorizontalSpeedPercent()
+        /*public Vector2 GetHorizontalSpeedPercent()
         {
             Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             return new Vector2(horizontalVelocity.magnitude / maxSpeed, 0); 
-        }
+        }*/
 
         #endregion
 
@@ -120,7 +122,7 @@ namespace Character
             // 2. Apply Movement Force
             if (targetDir.sqrMagnitude > 0.01f)
             {
-                rb.AddForce(targetDir * speed, ForceMode.Acceleration);
+                rb.AddForce(targetDir * acceleration, ForceMode.Acceleration);
             }
         }
 
@@ -167,9 +169,9 @@ namespace Character
         {
             Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             
-            if (horizontalVelocity.magnitude > maxSpeed)
+            if (horizontalVelocity.magnitude > maxVelocity)
             {
-                horizontalVelocity = horizontalVelocity.normalized * maxSpeed;
+                horizontalVelocity = horizontalVelocity.normalized * maxVelocity;
                 rb.linearVelocity = new Vector3(horizontalVelocity.x, rb.linearVelocity.y, horizontalVelocity.z);
             }
         }

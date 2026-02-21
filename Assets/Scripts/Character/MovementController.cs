@@ -5,10 +5,12 @@ namespace Character {
     public class MovementController : MonoBehaviour
     {
         [Header("Movement Settings")]
+        [SerializeField] protected float jumpForce = 3f;
         [SerializeField] protected float acceleration = 20f;
         [SerializeField] protected float maxVelocity = 5f;
         protected Rigidbody rb;
         protected Vector2 moveInput;
+        protected bool jumpInput; //protected lets physics controller use this
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         protected virtual void Start()
@@ -27,7 +29,10 @@ namespace Character {
             moveInput = Vector2.zero;
         }
 
-        public virtual void Jump() { /* NO JUMP SUPPORT */ }
+        public virtual void Jump() 
+        { 
+            jumpInput = true;
+        }
 
         public virtual Vector2 GetMovementVector()
         {
@@ -46,7 +51,7 @@ namespace Character {
             movement += transform.forward * moveInput.y;
             movement.Normalize();
             movement *= Time.deltaTime * acceleration;
-            rb.MovePosition(rb.position + movement);
+            //rb.MovePosition(rb.position + movement);
         }
     }
 }

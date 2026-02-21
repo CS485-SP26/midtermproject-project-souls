@@ -55,9 +55,16 @@ ModelImporter:
       bodyMask: 00000000010000000100000000000000000000000100000001000000010000000100000000000000000000000100000001000000
       curves: []
       events:
-      - time: 0.41584158
-        functionName: TillTile
-        data: 
+      - time: 0
+        functionName: SetTool
+        data: GardenHoe
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: SetTool
+        data: None
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
