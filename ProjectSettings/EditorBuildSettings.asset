@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Scene1-FarmingSim.unity
     guid: 48d33a998768c4f7fa610750da15b77d
+  - enabled: 1
+    path: Assets/Scenes/Scene2-Shop.unity
+    guid: 7b50d997af7c2d74a8d3af5da6adc782
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
