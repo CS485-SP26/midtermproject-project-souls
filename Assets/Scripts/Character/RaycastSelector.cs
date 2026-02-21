@@ -11,7 +11,7 @@ namespace Character
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                if (hit.collider.TryGetComponent<FarmTile>(out FarmTile tile))
+                if (hit.collider.TryGetComponent(out FarmTile tile))
                 {
                     SetActiveTile(tile);
                 }

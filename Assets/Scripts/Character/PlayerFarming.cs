@@ -9,7 +9,7 @@ namespace Character
     public class PlayerFarming : MonoBehaviour
     {
         [Header("Dependencies")]
-        //[SerializeField] private TileSelector tileSelector;
+        [SerializeField] private TileSelector tileSelector;
         [SerializeField] private FarmTileManager farmTileManager;
         private AnimatedController animatedController;
 
