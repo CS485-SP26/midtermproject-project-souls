@@ -3753,6 +3753,11 @@ MonoBehaviour:
   rows: 2
   cols: 2
   tileGap: 0.1
+  tiles:
+  - {fileID: 314766353}
+  - {fileID: 1856149785}
+  - {fileID: 268416332}
+  - {fileID: 818910885}
   progressBar: {fileID: 298155411}
 --- !u!1 &1201880230
 GameObject:
@@ -4794,6 +4799,7 @@ GameObject:
   - component: {fileID: 1832991199}
   - component: {fileID: 1832991198}
   - component: {fileID: 1832991197}
+  - component: {fileID: 1832991200}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -4862,6 +4868,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1832991200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832991196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bdc45d1c64e92e489ce5143119848f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TileEvent
+  AllTilesWet:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8145061694655009692, guid: d824016b64cc6f448842d675ff08ed24, type: 3}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1834998856
 GameObject:
   m_ObjectHideFlags: 0

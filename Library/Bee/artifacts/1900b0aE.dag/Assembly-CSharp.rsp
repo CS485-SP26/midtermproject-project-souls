@@ -472,6 +472,7 @@
 "Assets/Scripts/Core/AutoDestroy.cs"
 "Assets/Scripts/Core/FundsManager.cs"
 "Assets/Scripts/Core/GameManager.cs"
+"Assets/Scripts/Core/TileEvent.cs"
 "Assets/Scripts/Environment/DayController.cs"
 "Assets/Scripts/Farming/FarmTile.cs"
 "Assets/Scripts/Farming/FarmTileManager.cs"
