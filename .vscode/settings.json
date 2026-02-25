@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "psouls-farm.slnx"
+    "dotnet.defaultSolution": "midtermproject-project-souls.slnx"
 }

@@ -27,11 +27,13 @@ namespace Farming
 
         void OnEnable()
         {
+            dayController.dayPassedSystem += OnDayPassed; //we can add as many events as we want, these are fast compared to send message
             dayController.dayPassedEvent.AddListener(this.OnDayPassed);
         }
 
         void OnDisable()
         {
+            dayController.dayPassedSystem -= OnDayPassed;
             dayController.dayPassedEvent.RemoveListener(this.OnDayPassed);            
         }
 
@@ -97,11 +99,17 @@ namespace Farming
         void OnValidate()
         {
             #if UNITY_EDITOR
-            EditorApplication.delayCall += () => {
+            //EditorApplication.delayCall += () => { //we do register, but we never UNREGISTERED, fix by...
+            EditorApplication.delayCall -= DelayValidateGrid;
+            EditorApplication.delayCall += DelayValidateGrid;
+            //};
+            #endif
+        }
+
+        void DelayValidateGrid()
+        {
                 if (this == null) return; // Guard against the object being deleted
                 ValidateGrid();
-            };
-            #endif
         }
 
         void ValidateGrid() 

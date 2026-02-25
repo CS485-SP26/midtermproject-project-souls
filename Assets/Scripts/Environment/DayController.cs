@@ -22,6 +22,8 @@ namespace Environment
 
         public UnityEvent dayPassedEvent = new UnityEvent(); // Invoke() at end of day
 
+        public event Action dayPassedSystem;
+
         public void AdvanceDay()
         {
             Debug.Assert(sunLight, "DayController requires a 'Sun'");
@@ -38,8 +40,8 @@ namespace Environment
                 // Do this instead
                 dayLabel.SetText("Days: {0}", currentDay);                
             }
-
-            dayPassedEvent.Invoke(); //make announcement to all listeners
+            dayPassedSystem?.Invoke(); //? modifier means only do if not null.
+            dayPassedEvent?.Invoke(); //make announcement to all listeners
         }
 
         public void UpdateVisuals()
