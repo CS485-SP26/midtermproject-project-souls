@@ -1,14 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Farming;
+using System.Linq;
 
 namespace Character 
 {
-    public class TileSelector : MonoBehaviour
+    public class TileSelector : MonoBehaviour 
     {
         [SerializeField] protected FarmTile activeTile; // good for debugging
         public FarmTile GetSelectedTile() { return activeTile; }
-
+        protected List<object> currentSelection = new List<object>();
+        public List<T> GetSelectionOfType<T>()
+        {
+            List<T> returnValue = currentSelection.OfType<T>().ToList();
+            return returnValue;
+        }
+ 
         protected void SetActiveTile(FarmTile tile)
         {
             if (activeTile != tile)

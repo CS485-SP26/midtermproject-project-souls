@@ -476,6 +476,7 @@
 "Assets/Scripts/Environment/DayController.cs"
 "Assets/Scripts/Farming/FarmTile.cs"
 "Assets/Scripts/Farming/FarmTileManager.cs"
+"Assets/Scripts/Farming/IWaterable.cs"
 "Assets/Scripts/Shop/FarmingTrigger.cs"
 "Assets/Scripts/Shop/LoadFarmScene.cs"
 "Assets/Scripts/Shop/LoadShopScene.cs"
