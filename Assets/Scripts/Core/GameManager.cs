@@ -1,10 +1,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Core;
 
 namespace Core
 {
-    public class GameManager:MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
         static private GameManager instance = null;
 
@@ -24,21 +23,20 @@ namespace Core
         }
 
         [SerializeField] private FundsManager fundsManager;
+        [SerializeField] private TileDataManager tileDataManager;
 
         public FundsManager Funds => fundsManager;
-
+        public TileDataManager TileData => tileDataManager;
 
         void Awake()
         {
             if (GameManager.instance == null)
             {
-                // keep this as close to the top of Awake as possible to avoid
-                // multiple instancing
-                instance = this; 
+                instance = this;
                 DontDestroyOnLoad(this);
-                
-                if (fundsManager == null)
-                    fundsManager = GetComponent<FundsManager>();
+
+                if (fundsManager == null) fundsManager = GetComponent<FundsManager>();
+                if (tileDataManager == null) tileDataManager = GetComponent<TileDataManager>();
 
                 fundsManager.Initialize(10);
                 Debug.Log("GameManager set through Awake");
