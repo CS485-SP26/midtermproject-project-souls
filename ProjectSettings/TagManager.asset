@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Farm Tile
   - Ground
+  - GameManager
   layers:
   - Default
   - TransparentFX

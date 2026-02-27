@@ -4,7 +4,7 @@ using Environment;
 
 namespace Farming 
 {
-    public class FarmTile : MonoBehaviour
+    public class FarmTile : MonoBehaviour , IWaterable //newly added interface
     {
         public enum Condition { Grass, Tilled, Watered }
 
@@ -55,7 +55,7 @@ namespace Farming
             tillAudio?.Play();
         }
 
-        public void Water()
+        public void Water(float amount = 0f)
         {
             tileCondition = FarmTile.Condition.Watered;
             UpdateVisual();

@@ -1,11 +1,12 @@
 using UnityEngine;
 using TMPro; // Important for TextMeshPro
 using UnityEngine.Events;
+using System;
 using Farming;
 
 namespace Environment 
 {
-    public class DayController : MonoBehaviour
+    public class DayController : MonoBehaviour //this has changes to match the professors lecture from 2/24/26
     {
         [Header("Object References")]
         [SerializeField] private Light sunLight;
@@ -21,6 +22,8 @@ namespace Environment
         public int CurrentDay { get { return currentDay; } } 
 
         public UnityEvent dayPassedEvent = new UnityEvent(); // Invoke() at end of day
+
+        public event Action dayPassedSystem;
 
         public void AdvanceDay()
         {
@@ -38,8 +41,8 @@ namespace Environment
                 // Do this instead
                 dayLabel.SetText("Days: {0}", currentDay);                
             }
-
-            dayPassedEvent.Invoke(); //make announcement to all listeners
+            dayPassedSystem?.Invoke(); //? modifier means only do if not null.
+            dayPassedEvent?.Invoke(); //make announcement to all listeners
         }
 
         public void UpdateVisuals()

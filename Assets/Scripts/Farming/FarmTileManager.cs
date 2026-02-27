@@ -6,14 +6,14 @@ using Environment;
 
 namespace Farming
 {
-    public class FarmTileManager:MonoBehaviour
+    public class FarmTileManager:MonoBehaviour //this has changes to match the professors lecture from 2/24/26
     {
         [SerializeField] private GameObject farmTilePrefab;
         [SerializeField] DayController dayController;
         [SerializeField] private int rows = 4;
         [SerializeField] private int cols = 4;
         [SerializeField] private float tileGap = 0.1f;
-        private List<FarmTile> tiles = new List<FarmTile>();
+        public List<FarmTile> tiles = new List<FarmTile>(); //changed from private to public for tileevent.cs
         
         public SimpleProgressBar progressBar;
         private int tileCount = 0;
@@ -27,11 +27,13 @@ namespace Farming
 
         void OnEnable()
         {
+            dayController.dayPassedSystem += OnDayPassed; //we can add as many events as we want, these are fast compared to send message
             dayController.dayPassedEvent.AddListener(this.OnDayPassed);
         }
 
         void OnDisable()
         {
+            dayController.dayPassedSystem -= OnDayPassed;
             dayController.dayPassedEvent.RemoveListener(this.OnDayPassed);            
         }
 
@@ -97,11 +99,17 @@ namespace Farming
         void OnValidate()
         {
             #if UNITY_EDITOR
-            EditorApplication.delayCall += () => {
+            //EditorApplication.delayCall += () => { //we do register, but we never UNREGISTERED, fix by...
+            EditorApplication.delayCall -= DelayValidateGrid; //changed for lecture
+            EditorApplication.delayCall += DelayValidateGrid; //changed for lecture
+            //};
+            #endif
+        }
+
+        void DelayValidateGrid() //added by lecture
+        {
                 if (this == null) return; // Guard against the object being deleted
                 ValidateGrid();
-            };
-            #endif
         }
 
         void ValidateGrid() 
