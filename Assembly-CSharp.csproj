@@ -65,6 +65,7 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMPro_InstructionOverlay.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexShakeB.cs" />
     <Compile Include="Assets/Scripts/Core/AutoDestroy.cs" />
+    <Compile Include="Assets/Scripts/Farming/IHarvestable.cs" />
     <Compile Include="Assets/Scripts/Shop/SellPlant.cs" />
     <Compile Include="Assets/Scripts/Shop/LoadFarmScene.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexJitter.cs" />

@@ -63,6 +63,12 @@ namespace Core
         public void AddSeeds(int amount) => seedsManager.Add(amount); //same idea as addfunds, added for seeds manager
         public int GetSeeds() => seedsManager.Get(); //same idea as getfunds, added for seeds manager
 
+        private int plants;
+        public void AddPlants(int add)
+        {
+            plants = plants + add;
+        }
+        public int GetPlants() => plants;
         public void LoadScenebyName(string name)
         {
             Debug.Log("Loading scene: " + name);

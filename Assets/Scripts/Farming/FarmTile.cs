@@ -4,7 +4,7 @@ using Environment;
 
 namespace Farming
 {
-    public class FarmTile : MonoBehaviour , IWaterable //newly added interface
+    public class FarmTile : MonoBehaviour , IWaterable//newly added interface
     {
         public enum Condition { Grass, Tilled, Watered, Planted }
 
@@ -26,6 +26,7 @@ namespace Farming
         private int daysSinceLastInteraction = 0;
         public FarmTile.Condition GetCondition { get { return tileCondition; } } // TODO: Consider what the set would do?
 
+        private GameObject currentPlant;
         void Start()
         {
             tileRenderer = GetComponent<MeshRenderer>();
