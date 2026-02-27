@@ -23,8 +23,8 @@ namespace Core
             }
         }
 
-        [SerializeField] private FundsManager fundsManager;
-        [SerializeField] private SeedsManager seedsManager; //added for seeds purchasing
+        private FundsManager fundsManager;
+        private SeedsManager seedsManager; //added for seeds purchasing
 
         public FundsManager Funds => fundsManager;
         public SeedsManager Seeds => seedsManager; //added for seeds purchasing
@@ -45,7 +45,7 @@ namespace Core
                 if (seedsManager == null) //added for seeds purchasing
                     seedsManager = GetComponent<SeedsManager>(); //added for seeds purchasing
 
-                fundsManager.Initialize(10);
+                fundsManager.Initialize(0);
                 seedsManager.Initialize(0); //added for seeds purchasing
                 Debug.Log("GameManager set through Awake");
             }

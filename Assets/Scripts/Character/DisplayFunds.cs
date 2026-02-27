@@ -2,18 +2,27 @@ using Core;
 using UnityEngine;
 using TMPro;
 
-public class DisplayFunds : MonoBehaviour
+public class MoneyUI : MonoBehaviour
 {
-    [SerializeField] TMP_Text fundsText;
+    [SerializeField] private TextMeshProUGUI moneyText;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void OnEnable()
     {
-        changeFundsDisplay();
+        GameManager.Instance.Funds.OnFundsChanged += UpdateUI;
     }
 
-    public void changeFundsDisplay()
+    private void OnDisable()
     {
-        fundsText.text = "Funds: $" + GameManager.Instance.Funds.Amount;
+        GameManager.Instance.Funds.OnFundsChanged -= UpdateUI;
+    }
+
+    private void Start()
+    {
+        UpdateUI(GameManager.Instance.Funds.Get());
+    }
+
+    private void UpdateUI(int amount)
+    {
+        moneyText.text = "Funds: $" + amount;
     }
 }

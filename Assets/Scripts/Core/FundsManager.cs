@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace Core
 {
@@ -7,6 +8,8 @@ namespace Core
         public static FundsManager Instance { get; private set; }
         private int amount;
         public int Amount => amount;
+
+        public event Action<int> OnFundsChanged;
 
         private void Awake()
         {
@@ -23,10 +26,19 @@ namespace Core
         public void Initialize(int startingAmount)
         {
             amount = startingAmount;
+            OnFundsChanged?.Invoke(amount);
         }
 
-        public void Add(int value) => amount += value;
+        public void Add(int value)
+        {
+            amount += value;
+            OnFundsChanged?.Invoke(amount);
+        } 
         public int Get() => amount;
-        public void Set(int value) => amount = value;
+        public void Set(int value)
+        {
+            amount = value;
+            OnFundsChanged?.Invoke(amount);
+        }
     }
 }
