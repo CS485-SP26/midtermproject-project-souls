@@ -21,7 +21,7 @@ namespace Farming
         void Start()
         {
             Debug.Assert(farmTilePrefab, "FarmTileManager requires a farmTilePrefab");
-            Debug.Assert(dayController,  "FarmTileManager requires a dayController");
+            Debug.Assert(dayController, "FarmTileManager requires a dayController");
 
             tiles.Clear();
             foreach (Transform child in transform)
@@ -75,6 +75,7 @@ namespace Farming
                 if (tile.GetCondition == FarmTile.Condition.Watered)
                     readyCount++;
             }
+
             progressBar.SetProgress(readyCount, 0, tiles.Count);
         }
 
@@ -99,6 +100,7 @@ namespace Farming
                     clone.transform.parent = transform;
                     tiles.Add(clone.GetComponent<FarmTile>());
                 }
+
                 spawnPos.z += clone.transform.localScale.z + tileGap;
                 spawnPos.x = transform.position.x;
             }
@@ -106,13 +108,14 @@ namespace Farming
 
         void OnValidate()
         {
-            #if UNITY_EDITOR
-            EditorApplication.delayCall += () => {
+#if UNITY_EDITOR
+            EditorApplication.delayCall += () =>
+            {
                 if (this == null) return;
                 if (Application.isPlaying) return;
                 ValidateGrid();
             };
-            #endif
+#endif
         }
 
         void ValidateGrid()
@@ -135,14 +138,15 @@ namespace Farming
 
         void DestroyTiles()
         {
-            foreach (FarmTile tile in tiles)
+            for (int i = transform.childCount - 1; i >= 0; i--)
             {
                 #if UNITY_EDITOR
-                DestroyImmediate(tile.gameObject);
+                DestroyImmediate(transform.GetChild(i).gameObject);
                 #else
-                Destroy(tile.gameObject);
+                Destroy(transform.GetChild(i).gameObject);
                 #endif
             }
+
             tiles.Clear();
         }
     }
