@@ -6,7 +6,7 @@ using Environment;
 
 namespace Farming
 {
-    public class FarmTileManager:MonoBehaviour
+    public class FarmTileManager:MonoBehaviour //this has changes to match the professors lecture from 2/24/26
     {
         [SerializeField] private GameObject farmTilePrefab;
         [SerializeField] DayController dayController;
@@ -100,13 +100,13 @@ namespace Farming
         {
             #if UNITY_EDITOR
             //EditorApplication.delayCall += () => { //we do register, but we never UNREGISTERED, fix by...
-            EditorApplication.delayCall -= DelayValidateGrid;
-            EditorApplication.delayCall += DelayValidateGrid;
+            EditorApplication.delayCall -= DelayValidateGrid; //changed for lecture
+            EditorApplication.delayCall += DelayValidateGrid; //changed for lecture
             //};
             #endif
         }
 
-        void DelayValidateGrid()
+        void DelayValidateGrid() //added by lecture
         {
                 if (this == null) return; // Guard against the object being deleted
                 ValidateGrid();

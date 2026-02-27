@@ -10,10 +10,10 @@ namespace Character
         [SerializeField] protected FarmTile activeTile; // good for debugging
         public FarmTile GetSelectedTile() { return activeTile; }
         protected List<object> currentSelection = new List<object>();
-        public List<T> GetSelectionOfType<T>()
+        public List<T> GetSelectionOfType<T>() //added from professors lecture 2/24/26
         {
-            List<T> returnValue = currentSelection.OfType<T>().ToList();
-            return returnValue;
+            List<T> returnValue = currentSelection.OfType<T>().ToList(); //added from lecture
+            return returnValue; //added from lecture
         }
  
         protected void SetActiveTile(FarmTile tile)

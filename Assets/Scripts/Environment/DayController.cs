@@ -6,7 +6,7 @@ using Farming;
 
 namespace Environment 
 {
-    public class DayController : MonoBehaviour
+    public class DayController : MonoBehaviour //this has changes to match the professors lecture from 2/24/26
     {
         [Header("Object References")]
         [SerializeField] private Light sunLight;

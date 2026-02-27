@@ -43,7 +43,7 @@ namespace Character
             FarmTile tile = tileSelector.GetSelectedTile(); //you HAVE to make sure the tile selector is set to player (raycaster) in the inspector!
             //Debug.Log(tileSelector.GetSelectedTile().gameObject.name + " recognized for OnInteract");
             List<IWaterable> waterable = tileSelector.GetSelectionOfType<IWaterable>();
-            Debug.Log(waterable);
+            //Debug.Log(waterable);
             playerFarming.AttemptInteraction(tile);
         }
     }
