@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro; // Important for TextMeshPro
 using UnityEngine.Events;
-using Farming;
 
 namespace Environment 
 {
@@ -19,7 +18,8 @@ namespace Environment
         // Properties
         public float DayProgressPercent => Mathf.Clamp01(dayProgressSeconds / dayLengthSeconds);
         public int CurrentDay { get { return currentDay; } } 
-
+        public float getDayLengthSeconds() { return dayLengthSeconds; }
+        
         public UnityEvent dayPassedEvent = new UnityEvent(); // Invoke() at end of day
 
         public void AdvanceDay()

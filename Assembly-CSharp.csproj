@@ -91,6 +91,7 @@
     <Compile Include="Assets\Scripts\Character\PlayerFarming.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
+    <Compile Include="Assets\Scripts\Environment\PlantGrowth.cs" />
     <Compile Include="Assets\Scripts\Character\RaycastSelector.cs" />
     <Compile Include="Assets\Scripts\Core\FundsManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
