@@ -17,6 +17,8 @@ namespace Environment
         
         [SerializeField] private int growthDays = 3;
         private int currentGrowth = 0;
+
+        [SerializeField] private Transform visual;
         
 
         [SerializeField] private int cropValue = 10;
@@ -31,15 +33,41 @@ namespace Environment
 
         void Start()
         {
+            if (visual == null)
+            {
+                Debug.LogError($"{gameObject.name}: visual NOT assigned!");
+                enabled = false;
+                return;
+            }
+            else
+            {
+                Debug.Log($"{gameObject.name}: visual assigned as {visual.name}");
+            }
+
+            if (dayController == null)
+                dayController = FindFirstObjectByType<DayController>();
             
+            if (dayController == null)
+            {
+                Debug.LogError("DayController not found");
+                enabled = false;
+                return;
+            }
+
+
             // Subscribe to the dayPassedEvent
             dayController.dayPassedEvent.AddListener(OnDayPassed);
 
             dayDivisionSeconds = dayController.DayLengthSeconds / stepsPerDay;
-            transform.localScale = minSize;
+            visual.localScale = minSize;
             
         }
 
+        void Oestroy()
+        {
+            if(dayController!=null)
+                dayController.dayPassedEvent.RemoveListener(OnDayPassed);
+        }
         void OnDayPassed()
         {
             currentGrowth++;
@@ -71,7 +99,7 @@ namespace Environment
         // This is the function you wanted to call
         private void MyFunctionWhenGrown()
         {
-            transform.localScale += (maxSize - minSize) / (growthDays * stepsPerDay);
+            visual.localScale += (maxSize - minSize) / (growthDays * stepsPerDay);
         }
     }
 }

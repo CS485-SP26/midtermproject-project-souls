@@ -46,7 +46,7 @@ namespace Core
                     seedsManager = GetComponent<SeedsManager>(); //added for seeds purchasing
 
                 fundsManager.Initialize(0);
-                seedsManager.Initialize(0); //added for seeds purchasing
+                seedsManager.Initialize(5); //added for seeds purchasing
                 Debug.Log("GameManager set through Awake");
             }
             else

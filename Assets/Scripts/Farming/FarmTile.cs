@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Environment;
+using System;
 
 namespace Farming
 {
@@ -14,6 +15,7 @@ namespace Farming
         [SerializeField] private Material grassMaterial;
         [SerializeField] private Material tilledMaterial;
         [SerializeField] private Material wateredMaterial;
+        [SerializeField] private Transform plantSpawnPoint;
         MeshRenderer tileRenderer;
 
         [Header("Audio")]
@@ -34,7 +36,11 @@ namespace Farming
 
             foreach (Transform edge in transform)
             {
-                materials.Add(edge.gameObject.GetComponent<MeshRenderer>().material);
+                MeshRenderer renderer = edge.GetComponent<MeshRenderer>();
+                if (renderer != null)
+                {
+                    materials.Add(renderer.material);
+                }
             }
         }
 
@@ -63,6 +69,25 @@ namespace Farming
             tileCondition = FarmTile.Condition.Watered;
             UpdateVisual();
             waterAudio?.Play();
+        }
+
+
+        public void Plant(GameObject plantPrefab)
+        {
+            if (currentPlant != null) return;
+            if (plantSpawnPoint == null || plantPrefab == null) return;
+
+            currentPlant = Instantiate(plantPrefab, plantSpawnPoint.position, plantSpawnPoint.rotation);
+
+            currentPlant.transform.SetParent(plantSpawnPoint, true);
+            currentPlant.transform.localPosition = Vector3.zero;
+            currentPlant.transform.localRotation = Quaternion.identity;
+
+            Debug.Log("Spawn world pos: " + plantSpawnPoint.position);
+            Debug.Log("Tile world pos: " + transform.position);
+
+            tileCondition = Condition.Planted;
+
         }
 
         public void Harvest()

@@ -3,6 +3,7 @@ using UnityEngine;
 using Farming;
 using TMPro;
 using Core;
+using System.ComponentModel;
 
 namespace Character
 {
@@ -29,6 +30,7 @@ namespace Character
         [SerializeField] private DepletingBar waterLevelUI; //eventually refactor this to water can
         [SerializeField] private float waterLevel = 1f;
         [SerializeField] private float waterPerUse = 0.2f;
+        [SerializeField] private GameObject plantPrefab;
 
         private void Start()
         {
@@ -60,6 +62,26 @@ namespace Character
                         waterLevel -= waterPerUse;
                         waterLevelUI.SetFill(waterLevel);
                     }
+                    break;
+
+                // used chatGPT and stackoverflow for formatting/debugging help - MS
+                case FarmTile.Condition.Watered:
+                    if (SeedsManager.Instance == null)
+                    {
+                        Debug.LogError("SeedsManager missing");
+                        return;
+                    }
+                    Debug.Log("Seeds = " + SeedsManager.Instance.Get());
+
+                    if(SeedsManager.Instance.Get()==0)
+                    {
+                        //SeedsManager.Instance.Set(SeedsManager.Instance.Get() - 1);
+                        animatedController.SetTrigger("Plant");
+
+                        tile.Plant(plantPrefab);
+                        
+                    }
+                    
                     break;
 
                 default: break;
