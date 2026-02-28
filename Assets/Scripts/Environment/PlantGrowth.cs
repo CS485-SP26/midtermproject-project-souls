@@ -35,7 +35,7 @@ namespace Environment
             // Subscribe to the dayPassedEvent
             dayController.dayPassedEvent.AddListener(OnDayPassed);
 
-            dayDivisionSeconds = dayController.getDayLengthSeconds() / stepsPerDay;
+            dayDivisionSeconds = dayController.DayLengthSeconds / stepsPerDay;
             transform.localScale = minSize;
             
         }
@@ -56,7 +56,7 @@ namespace Environment
         private void CheckForScaleChange()
         {
             // Check if the current scale is different from the last recorded scale
-            if (dayDivisionSeconds >= dayController.getDayLengthSeconds() / stepsPerDay)
+            if (dayDivisionSeconds >= dayController.DayLengthSeconds / stepsPerDay)
             {
 
                 // 1. Call your specific internal function

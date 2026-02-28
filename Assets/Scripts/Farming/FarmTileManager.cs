@@ -135,12 +135,12 @@ namespace Farming
 
         void DestroyTiles()
         {
-            foreach (FarmTile tile in tiles)
+            for (int i = transform.childCount - 1; i >= 0; i--)
             {
                 #if UNITY_EDITOR
-                DestroyImmediate(tile.gameObject);
+                DestroyImmediate(transform.GetChild(i).gameObject);
                 #else
-                Destroy(tile.gameObject);
+                Destroy(transform.GetChild(i).gameObject);
                 #endif
             }
             tiles.Clear();

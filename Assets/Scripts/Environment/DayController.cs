@@ -20,7 +20,8 @@ namespace Environment
         // Properties
         public float DayProgressPercent => Mathf.Clamp01(dayProgressSeconds / dayLengthSeconds);
         public int CurrentDay { get { return currentDay; } } 
-
+        public float DayLengthSeconds => dayLengthSeconds;
+        
         public UnityEvent dayPassedEvent = new UnityEvent(); // Invoke() at end of day
 
         public event Action dayPassedSystem;
