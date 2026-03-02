@@ -15,11 +15,12 @@ public class TileEvent : MonoBehaviour //this code could definitely be improved,
     int wetted = 0; //wetted is how many wet tiles there are
     int goal = -1; //goal is the amount of tiles total, set to -1 so this doesnt match wetted by default
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return new WaitForSeconds(1f); //this seconds delay MUST be here, because farmtilemanager has it, count does NOT work without it
         Debug.Assert(manager, "the farm tile manager is missing for tile event!");
         goal = manager.ConfirmCount();
-        Debug.Log("goal is " + goal);
+        //Debug.Log("goal is " + goal);
 
         interactCheck.interacting.AddListener(OnCheckWater);
         //InvokeRepeating(nameof(OnCheckWater), 10f, 10f); //repeat a check every 10 seconds, this NEEDS to be replaced to a trigger on tile interaction later (havent figured it out yet) 
@@ -27,11 +28,11 @@ public class TileEvent : MonoBehaviour //this code could definitely be improved,
 
     public void OnCheckWater() //newly created function
     {
-        Debug.Log("interactCheck has been tripped!");
+        //Debug.Log("interactCheck has been tripped!");
 
         wetted = manager.ConfirmTiles();
 
-        Debug.Log("wetted tiles: " + wetted);
+        //Debug.Log("wetted tiles: " + wetted);
 
         if(wetted == goal) //if we have as many wet tiles as the goal
         {

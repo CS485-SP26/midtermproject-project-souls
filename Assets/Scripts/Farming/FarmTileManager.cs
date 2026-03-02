@@ -57,11 +57,16 @@ namespace Farming
 
         public int ConfirmCount()
         {
+            
             int countTiles = 0;
             foreach (FarmTile farmTile in tiles)
             {
-                countTiles++;
+                if(farmTile.GetCondition == FarmTile.Condition.Grass)
+                {
+                    countTiles++;
+                }
             }
+            //Debug.Log("tiles counted: " + countTiles);
             return countTiles;
         }
 
@@ -114,7 +119,6 @@ namespace Farming
                 spawnPos.z += clone.transform.localScale.z + tileGap;
                 spawnPos.x = transform.position.x;
             }
-            
             
         }
 
