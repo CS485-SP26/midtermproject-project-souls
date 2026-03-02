@@ -3,6 +3,7 @@ using Art.UI.ProgressBar;
 using UnityEngine;
 using UnityEditor;
 using Environment;
+using Unity.VisualScripting;
 
 namespace Farming
 {
@@ -13,7 +14,7 @@ namespace Farming
         [SerializeField] private int rows = 4;
         [SerializeField] private int cols = 4;
         [SerializeField] private float tileGap = 0.1f;
-        [SerializeField] private GameObject plantPrefab; // Added to spawn saved plants
+        //[SerializeField] private GameObject plantPrefab; // Added to spawn saved plants
         private List<FarmTile> tiles = new List<FarmTile>();
         
         public GameObject PlantPrefab => plantPrefab;
@@ -41,7 +42,6 @@ namespace Farming
                     tiles[i].LoadData();
                 }
             }
-
             UpdateProgressBar();
         }
 
@@ -79,10 +79,10 @@ namespace Farming
             int countTiles = 0;
             foreach (FarmTile farmTile in tiles)
             {
-                if(farmTile.GetCondition == FarmTile.Condition.Grass)
-                {
+                //if(farmTile.GetCondition == FarmTile.Condition.Grass)
+                //{
                     countTiles++;
-                }
+                //}
             }
             //Debug.Log("tiles counted: " + countTiles);
             return countTiles;
@@ -104,8 +104,7 @@ namespace Farming
         }
 
         public void UpdateProgressBar()
-        {
-            
+        {  
             if(!progressBar) return;
             
             int readyCount = 0;
@@ -135,7 +134,7 @@ namespace Farming
                     clone.name = "Farm Tile " + count++.ToString();
                     spawnPos.x += clone.transform.localScale.x + tileGap;
                     clone.transform.parent = transform; // build heirarchy
-                    var tile = clone.GetComponent<FarmTile>();
+                    /*var tile = clone.GetComponent<FarmTile>();
                     //Debug.Assert(tile, $"farmTilePrefab is missing a FarmTile component on {clone.name}");
                     if (tile) tiles.Add(tile);
                 }
@@ -145,6 +144,11 @@ namespace Farming
                     spawnPos.z += clone.transform.localScale.z + tileGap;
                     spawnPos.x = transform.position.x;
                 }
+            }*/
+                    tiles.Add(clone.GetComponent<FarmTile>()); // for resize/delete
+                }
+                spawnPos.z += clone.transform.localScale.z + tileGap;
+                spawnPos.x = transform.position.x;
             }
             
         }
@@ -183,7 +187,14 @@ namespace Farming
 
             tiles.Clear();
             tiles.AddRange(GetComponentsInChildren<FarmTile>());
-
+            /*tiles.Clear();
+            foreach (Transform child in transform)
+            {
+                if (child.gameObject.TryGetComponent<FarmTile>(out var tile))
+                {
+                    tiles.Add(tile);
+                }
+            }*/
             int newCount = rows * cols;
 
             if (tiles.Count != newCount)

@@ -4,30 +4,27 @@ using Environment;
 using System.Collections;
 using UnityEngine.Events;
 using Core;
-
+using Character;
 public class TileEvent : MonoBehaviour //this code could definitely be improved, event for when all tiles are wet, refreshes check at the end of the day
 {
-    public UnityEngine.Events.UnityEvent AllTilesWet = new UnityEvent();
+    public UnityEvent AllTilesWet = new UnityEvent();
     [SerializeField] FarmTileManager manager; //these need to be serialize fields or else you will get reference object is not set to object error (trying to use null object)
+    [SerializeField] PlayerFarming interactCheck; //needed for the same reason as manager
     [SerializeField] private int tileIndex;
-    
     int wetted = 0; //wetted is how many wet tiles there are
     int goal = -1; //goal is the amount of tiles total, set to -1 so this doesnt match wetted by default
 
         private IEnumerator Start() // IEnumerator Start is called once before the first execution of Update after the MonoBehaviour is created and also lets you set a seconds delay
     {
         //wait until manager exists
-        while (manager == null)
-            yield return null;
-        
-        while (manager.tiles == null || manager.tiles.Count == 0)
+        while (manager == null || manager.ConfirmCount() == 0)
             yield return null;
 
         Debug.Assert(manager, "the farm tile manager is missing for tile event!");
         goal = manager.ConfirmCount();
         Debug.Log("TileEvent ready. Goal = " + goal);
 
-        InvokeRepeating(nameof(OnCheckWater), 10f, 10f); //repeat a check every 10 seconds, this NEEDS to be replaced to a trigger on tile interaction later (havent figured it out yet) 
+        interactCheck.interacting.AddListener(OnCheckWater);
     }
 
     public void OnCheckWater() //newly created function
@@ -35,16 +32,14 @@ public class TileEvent : MonoBehaviour //this code could definitely be improved,
         // ?fixed with chatGPTs help for debugging
         //Debug.Log("interactCheck has been tripped!");
 
-        if (manager == null || manager.tiles == null) return;
-        wetted = 0; // needs to be reset each time otherwise goes up every 10secs
+        if (manager == null || manager.ConfirmCount() == 0) return;
+        //wetted = 0; // needs to be reset each time otherwise goes up every 10secs
 
-        foreach (FarmTile farmTile in manager.tiles) //recycled code from farmtilemanager.cs
-        {
-            if(farmTile != null && farmTile.GetCondition == FarmTile.Condition.Watered)
-                wetted++;
-        }
-        
-        //Debug.Log("wetted tiles: " + wetted);
+        Debug.Log("interactCheck has been tripped!");
+
+        wetted = manager.ConfirmTiles();
+
+        Debug.Log("wetted tiles: " + wetted);
 
         if(wetted == goal) //if we have as many wet tiles as the goal
         {
