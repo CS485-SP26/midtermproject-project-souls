@@ -3,6 +3,7 @@ using Art.UI.ProgressBar;
 using UnityEngine;
 using UnityEditor;
 using Environment;
+using Unity.VisualScripting;
 
 namespace Farming
 {
@@ -13,7 +14,7 @@ namespace Farming
         [SerializeField] private int rows = 4;
         [SerializeField] private int cols = 4;
         [SerializeField] private float tileGap = 0.1f;
-        public List<FarmTile> tiles = new List<FarmTile>(); //changed from private to public for tileevent.cs
+        private List<FarmTile> tiles = new List<FarmTile>();
         
         public SimpleProgressBar progressBar;
         private int tileCount = 0;
@@ -52,6 +53,31 @@ namespace Farming
                 }
                 count--;
             }
+        }
+
+        public int ConfirmCount()
+        {
+            int countTiles = 0;
+            foreach (FarmTile farmTile in tiles)
+            {
+                countTiles++;
+            }
+            return countTiles;
+        }
+
+        public int ConfirmTiles()
+        {
+            int wetTiles = 0;
+
+            foreach (FarmTile farmTile in tiles)
+            {
+                if(farmTile.GetCondition == FarmTile.Condition.Watered)
+                {
+                    wetTiles++;
+                }
+            }
+
+            return wetTiles;
         }
 
         public void UpdateProgressBar()
