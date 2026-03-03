@@ -369,7 +369,7 @@ GameObject:
   - component: {fileID: 621266013}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -386,7 +386,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550bb88b207175a489376f2e8459d91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadScene
-  fundsManager: {fileID: 0}
+  fundsManager: {fileID: 621266012}
+  seedsManager: {fileID: 621266013}
   tileDataManager: {fileID: 0}
 --- !u!4 &621266011
 Transform:
@@ -424,9 +425,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 621266009}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff62ced0b6b7bfc4b897633a54bec989, type: 3}
+  m_Script: {fileID: 11500000, guid: 8de59dfe413d6964a86af7a0e4ced95c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Core.TileDataManager
+  m_EditorClassIdentifier: Assembly-CSharp::Core.SeedsManager
 --- !u!1 &644770500
 GameObject:
   m_ObjectHideFlags: 0
