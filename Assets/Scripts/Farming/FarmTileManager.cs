@@ -7,15 +7,15 @@ using Core;
 
 namespace Farming
 {
-    public class FarmTileManager:MonoBehaviour //this has changes to match the professors lecture from 2/24/26
+    public class FarmTileManager : MonoBehaviour
     {
         [SerializeField] private GameObject farmTilePrefab;
         [SerializeField] private DayController dayController;
         [SerializeField] private int rows = 4;
         [SerializeField] private int cols = 4;
         [SerializeField] private float tileGap = 0.1f;
-        public List<FarmTile> tiles = new List<FarmTile>(); //changed from private to public for tileevent.cs
-        
+        private List<FarmTile> tiles = new List<FarmTile>();
+
         public SimpleProgressBar progressBar;
 
         void Start()
@@ -42,14 +42,12 @@ namespace Farming
 
         void OnEnable()
         {
-            dayController.dayPassedSystem += OnDayPassed; //we can add as many events as we want, these are fast compared to send message
-            dayController.dayPassedEvent.AddListener(this.OnDayPassed);
+            dayController.dayPassedEvent.AddListener(OnDayPassed);
         }
 
         void OnDisable()
         {
-            dayController.dayPassedSystem -= OnDayPassed;
-            dayController.dayPassedEvent.RemoveListener(this.OnDayPassed);            
+            dayController.dayPassedEvent.RemoveListener(OnDayPassed);
         }
 
         public void OnDayPassed()
@@ -109,17 +107,12 @@ namespace Farming
         void OnValidate()
         {
             #if UNITY_EDITOR
-            //EditorApplication.delayCall += () => { //we do register, but we never UNREGISTERED, fix by...
-            EditorApplication.delayCall -= DelayValidateGrid; //changed for lecture
-            EditorApplication.delayCall += DelayValidateGrid; //changed for lecture
-            //};
-            #endif
-        }
-
-        void DelayValidateGrid() //added by lecture
-        {
-                if (this == null) return; // Guard against the object being deleted
+            EditorApplication.delayCall += () => {
+                if (this == null) return;
+                if (Application.isPlaying) return;
                 ValidateGrid();
+            };
+            #endif
         }
 
         void ValidateGrid()
@@ -142,12 +135,12 @@ namespace Farming
 
         void DestroyTiles()
         {
-            for (int i = transform.childCount - 1; i >= 0; i--)
+            foreach (FarmTile tile in tiles)
             {
                 #if UNITY_EDITOR
-                DestroyImmediate(transform.GetChild(i).gameObject);
+                DestroyImmediate(tile.gameObject);
                 #else
-                Destroy(transform.GetChild(i).gameObject);
+                Destroy(tile.gameObject);
                 #endif
             }
             tiles.Clear();

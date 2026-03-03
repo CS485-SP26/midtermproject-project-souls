@@ -3,11 +3,11 @@ using UnityEngine;
 using Environment;
 using Core;
 
-namespace Farming
+namespace Farming 
 {
-    public class FarmTile : MonoBehaviour , IWaterable//newly added interface
+    public class FarmTile : MonoBehaviour
     {
-        public enum Condition { Grass, Tilled, Watered, Planted }
+        public enum Condition { Grass, Tilled, Watered }
 
         public int tileID; // assigned by FarmTileManager on Start
 
@@ -52,11 +52,9 @@ namespace Farming
         {
             switch (tileCondition)
             {
-                case FarmTile.Condition.Grass: Till(); break;
-                case FarmTile.Condition.Tilled: Water(); break;
-                case FarmTile.Condition.Watered: Debug.Log("Ready for planting"); break;
-                //new Interact
-                case FarmTile.Condition.Planted: Harvest(); break;
+                case FarmTile.Condition.Grass:    Till();  break;
+                case FarmTile.Condition.Tilled:   Water(); break;
+                case FarmTile.Condition.Watered:  Debug.Log("Ready for planting"); break;
             }
             daysSinceLastInteraction = 0;
             GameManager.Instance.TileData.SaveTile(tileID, tileCondition, daysSinceLastInteraction);
@@ -69,36 +67,11 @@ namespace Farming
             tillAudio?.Play();
         }
 
-        public void Water(float amount = 0f)
+        public void Water()
         {
             tileCondition = FarmTile.Condition.Watered;
             UpdateVisual();
             waterAudio?.Play();
-        }
-
-        public void Harvest()
-        {
-            //if there is no plant on tile
-            if (currentPlant == null) return;
-            //check if plant is harvestable
-                IHarvestable harvestable = currentPlant.GetComponent<IHarvestable>();
-            //if it's not fully grown
-            if (!harvestable.CanHarvest())
-            {
-                Debug.Log("Plant is not ready to harvest.");
-                return;
-            }
-            //see plants value
-            int value = harvestable.Harvest();
-            Debug.Log("Harvested for " + value);
-            //remove the plant from the scene.
-            Destroy(currentPlant);
-            //clear object reference
-            currentPlant = null;
-            //after harvesting, for now changes to tilled, we'll decide if we wanna change tht
-            tileCondition = Condition.Tilled;
-            //update visuals.
-            UpdateVisual();
         }
 
         private void UpdateVisual()
