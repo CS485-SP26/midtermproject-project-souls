@@ -1,10 +1,11 @@
+using Farming;
 using UnityEngine;
 using UnityEngine.Events; // Required for UnityEvent
 
 namespace Environment
 {
 
-    public class PlantGrowth : MonoBehaviour
+    public class PlantGrowth : MonoBehaviour, IHarvestable
     {
         [Header("Events")]
         // Drag and drop functions here in the Inspector
@@ -30,6 +31,8 @@ namespace Environment
 
         [SerializeField] private Vector3 maxSize = new Vector3(1f, 1f, 1f);
         [SerializeField] private int stepsPerDay = 10;
+
+        private bool fullyGrown = false;
 
         void Start()
         {
@@ -63,7 +66,7 @@ namespace Environment
             
         }
 
-        void Oestroy()
+        void OnDestroy()
         {
             if(dayController!=null)
                 dayController.dayPassedEvent.RemoveListener(OnDayPassed);
@@ -97,9 +100,47 @@ namespace Environment
         }
 
         // This is the function you wanted to call
+        // modified to cap growth when fully mature plant, written with help from chatGPT
         private void MyFunctionWhenGrown()
         {
-            visual.localScale += (maxSize - minSize) / (growthDays * stepsPerDay);
+            if (fullyGrown) return;
+
+            Vector3 growthStep = (maxSize - minSize) / (growthDays * stepsPerDay);
+            visual.localScale += growthStep;
+
+            visual.localScale = new Vector3(
+                Mathf.Min(visual.localScale.x, maxSize.x),
+                Mathf.Min(visual.localScale.y, maxSize.y),
+                Mathf.Min(visual.localScale.z, maxSize.z)
+            );
+
+            if (visual.localScale.x >= maxSize.x &&
+                visual.localScale.y >= maxSize.y &&
+                visual.localScale.z >= maxSize.z)
+            {
+                visual.localScale = maxSize;
+                fullyGrown = true;
+                Debug.Log("Plant fully grown");
+            }
+
+        }
+
+        public bool CanHarvest()
+        {
+            return fullyGrown;
+        }
+
+        public int Harvest()
+        {
+            if (!fullyGrown) return 0;
+
+            fullyGrown = false;
+            return cropValue;
+        }
+
+        public int HarvestValue()
+        {
+            return 5; // temp hard coded plant value for testing
         }
     }
 }

@@ -83,6 +83,12 @@ namespace Character
                     }
                     
                     break;
+                
+                case FarmTile.Condition.Planted:
+                    animatedController.SetTrigger("Harvest");
+                    tile.Interact();
+
+                    break;
 
                 default: break;
             }

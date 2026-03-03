@@ -49,7 +49,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   dayController: {fileID: 0}
-  growthDays: 3
+  growthDays: 1
   visual: {fileID: 3193841282766659744}
   cropValue: 10
   minSize: {x: 0.1, y: 0.1, z: 0.1}

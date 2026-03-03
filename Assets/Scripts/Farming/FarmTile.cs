@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Environment;
 using System;
+using Core;
 
 namespace Farming
 {
@@ -46,6 +47,9 @@ namespace Farming
 
         public void Interact()
         {
+            // temp debug helper
+            Debug.Log("Tile interact condition " + tileCondition);
+
             switch(tileCondition)
             {
                 case FarmTile.Condition.Grass: Till(); break;
@@ -105,6 +109,18 @@ namespace Farming
             //see plants value
             int value = harvestable.Harvest();
             Debug.Log("Harvested for " + value);
+
+            // add funds to player
+            if (FundsManager.Instance != null)
+            {
+                FundsManager.Instance.Add(value);
+                Debug.Log("Added " + value + " to player funds.");
+            }
+            else
+            {
+                Debug.LogWarning("FundsManager instance not found");
+            }    
+
             //remove the plant from the scene.
             Destroy(currentPlant);
             //clear object reference

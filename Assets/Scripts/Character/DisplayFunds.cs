@@ -8,17 +8,17 @@ public class MoneyUI : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.Funds.OnFundsChanged += UpdateUI;
+        FundsManager.Instance.OnFundsChanged += UpdateUI;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.Funds.OnFundsChanged -= UpdateUI;
+        FundsManager.Instance.OnFundsChanged -= UpdateUI;
     }
 
     private void Start()
     {
-        UpdateUI(GameManager.Instance.Funds.Get());
+        UpdateUI(FundsManager.Instance.Get());
     }
 
     private void UpdateUI(int amount)
