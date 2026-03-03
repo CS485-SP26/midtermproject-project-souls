@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Farming;
+using System.Collections.Generic;
 
 namespace Character 
 {
@@ -41,6 +42,8 @@ namespace Character
             // Delegate the logic to the farming script
             FarmTile tile = tileSelector.GetSelectedTile(); //you HAVE to make sure the tile selector is set to player (raycaster) in the inspector!
             //Debug.Log(tileSelector.GetSelectedTile().gameObject.name + " recognized for OnInteract");
+            List<IWaterable> waterable = tileSelector.GetSelectionOfType<IWaterable>();
+            //Debug.Log(waterable);
             playerFarming.AttemptInteraction(tile);
         }
     }
