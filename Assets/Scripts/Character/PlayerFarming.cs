@@ -35,10 +35,12 @@ namespace Character
         private void Start()
         {
             animatedController = GetComponent<AnimatedController>();
-            
-            // Initialize UI
-            // UpdateWaterUI();
-            fundsText.text = "Funds: $" + GameManager.Instance.GetFunds();
+            //Debug.Assert(GameManager.Instance != null, "PlayerFarming requires GameManager to be initialized");
+
+            if (fundsText != null && GameManager.Instance != null)
+            {
+                fundsText.text = "Funds: $" + GameManager.Instance.GetFunds();
+            }
 
             SetTool("None");
             waterLevelUI.SetFill(waterLevel);
@@ -73,13 +75,11 @@ namespace Character
                     }
                     Debug.Log("Seeds = " + SeedsManager.Instance.Get());
 
-                    if(SeedsManager.Instance.Get()==0)
+                    if(SeedsManager.Instance.Get() > 0)
                     {
-                        //SeedsManager.Instance.Set(SeedsManager.Instance.Get() - 1);
+                        SeedsManager.Instance.Set(SeedsManager.Instance.Get() - 1); 
                         animatedController.SetTrigger("Plant");
-
                         tile.Plant(plantPrefab);
-                        
                     }
                     
                     break;

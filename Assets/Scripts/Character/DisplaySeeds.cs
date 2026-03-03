@@ -14,6 +14,13 @@ public class DisplaySeeds : MonoBehaviour //basically a copy of display funds
 
     public void changeSeedsDisplay()
     {
-        seedsText.text = "Seeds: " + GameManager.Instance.Seeds.Amount;
+        if (GameManager.Instance != null)
+        {
+            int seeds = GameManager.Instance.GetSeeds();
+            if (seedsText != null)
+            {
+                seedsText.SetText($"Seeds: {seeds}");
+            }
+        }
     }
 }

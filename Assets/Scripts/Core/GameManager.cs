@@ -6,22 +6,8 @@ namespace Core
 {
     public class GameManager:MonoBehaviour //game manager has changes to it, specifically with compatibility to seedsManager which follows the same logic as fundsManager
     {
-        static private GameManager instance = null;
-
-        static public GameManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    GameObject go = new GameObject("GameManager");
-                    instance = go.AddComponent<GameManager>();
-                    DontDestroyOnLoad(go);
-                    Debug.Log("Create a new GameManager.");
-                }
-                return instance;
-            }
-        }
+        public static GameManager Instance { get; private set; }
+        
 
         private FundsManager fundsManager;
         private SeedsManager seedsManager; //added for seeds purchasing
@@ -35,32 +21,31 @@ namespace Core
 
         void Awake()
         {
-            if (GameManager.instance == null)
+            if (Instance != null && Instance != this)
             {
-                // keep this as close to the top of Awake as possible to avoid
-                // multiple instancing
-                instance = this; 
-                DontDestroyOnLoad(this);
-                
-                if (fundsManager == null)
-                    fundsManager = GetComponent<FundsManager>();
-
-                if (seedsManager == null) //added for seeds purchasing
-                    seedsManager = GetComponent<SeedsManager>(); //added for seeds purchasing
-                
-                if (seasonManager == null)
-                    seasonManager = GetComponent<SeasonManager>();
-
-                fundsManager.Initialize(0);
-                seedsManager.Initialize(5); //added for seeds purchasing
-                seasonManager.Initialize();
-                Debug.Log("GameManager set through Awake");
+                Destroy(gameObject);
+                return;
             }
-            else
-            {
-                Debug.Log("Duplicate GameManager attempted. Deleting new attempt.");
-                Destroy(this);
-            }
+
+            // keep this as close to the top of Awake as possible to avoid
+            // multiple instancing
+            Instance = this;
+            DontDestroyOnLoad(this);
+            
+            if (fundsManager == null) 
+                fundsManager = GetComponent<FundsManager>();
+
+            if (seedsManager == null) //added for seeds purchasing
+                seedsManager = GetComponent<SeedsManager>(); //added for seeds purchasing
+                
+            if (seasonManager == null)
+                seasonManager = GetComponent<SeasonManager>();
+
+            fundsManager.Initialize(0);
+            seedsManager.Initialize(5); //added for seeds purchasing
+            seasonManager.Initialize();
+            Debug.Log("GameManager set through Awake");
+
         }
 
         public void AddFunds(int amount) => fundsManager.Add(amount);

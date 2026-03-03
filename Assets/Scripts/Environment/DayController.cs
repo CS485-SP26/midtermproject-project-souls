@@ -10,7 +10,6 @@ namespace Environment
     {
         [Header("Object References")]
         [SerializeField] private Light sunLight;
-        [SerializeField] private TMP_Text dayLabel;
         
         [Header("Time Constraints")]
         [SerializeField] private float dayLengthSeconds = 60f;
@@ -29,19 +28,10 @@ namespace Environment
         public void AdvanceDay()
         {
             Debug.Assert(sunLight, "DayController requires a 'Sun'");
-            if (dayLabel == null) Debug.Log("DayController does not have a label to update");
 
             dayProgressSeconds = 0f; // Reset to start a new day
             currentDay++;
             
-            if (dayLabel)
-            {
-                // Don't do this! It generates garbage (will eventually invoke Garbage Collect)
-                //dayLabel.text="Days: " + currentDay.ToString();
-
-                // Do this instead
-                dayLabel.SetText("Days: {0}", currentDay);                
-            }
             dayPassedSystem?.Invoke(); //? modifier means only do if not null.
             dayPassedEvent?.Invoke(); //make announcement to all listeners
         }

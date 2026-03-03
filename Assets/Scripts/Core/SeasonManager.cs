@@ -11,6 +11,8 @@ public class SeasonManager : MonoBehaviour
         Fall,
         Winter
     }
+    
+    private int numberOfSeasons = System.Enum.GetNames(typeof(Season)).Length;
 
     enum DayOfWeek
     {
@@ -22,6 +24,8 @@ public class SeasonManager : MonoBehaviour
         Saturday,
         Sunday
     }
+    
+    private int daysPerSeason = System.Enum.GetNames(typeof(DayOfWeek)).Length;
 
     struct Date
     {
@@ -31,6 +35,9 @@ public class SeasonManager : MonoBehaviour
     }
     
     private Date currentDate;
+    
+    private float percentYearPassed => ((int)currentDate.season * daysPerSeason + currentDate.day) / 
+                                       (float)(numberOfSeasons * daysPerSeason);
     
     [SerializeField] private DayController dayController;
     [SerializeField] private TMP_Text dateLabel;    
@@ -48,10 +55,9 @@ public class SeasonManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        LogDate();
         if (dateLabel)
         {
-            dateLabel.SetText($"{currentDate.dayOfWeek}, {currentDate.season}\nDay: {currentDate.day}");
+            dateLabel.SetText(DateToString());
         }
     }
 
@@ -71,24 +77,21 @@ public class SeasonManager : MonoBehaviour
     public void AdvanceDate()
     {
         currentDate.day++;
-        currentDate.dayOfWeek = (DayOfWeek)(((int)currentDate.dayOfWeek + 1) % 7);
-
-        if (currentDate.day > 6)
+        currentDate.dayOfWeek = (DayOfWeek)(((int)currentDate.dayOfWeek + 1) % daysPerSeason);
+        if (currentDate.day > daysPerSeason)
         {
             currentDate.day = 1;
-            currentDate.season = (Season)(((int)currentDate.season + 1) % 4);
+            currentDate.season = (Season)(((int)currentDate.season + 1) % numberOfSeasons);
         }
-
-        LogDate();
-        if (dateLabel)
+       
+        if (dateLabel)        
         {
-            dateLabel.SetText($"{currentDate.dayOfWeek}, {currentDate.season}\nDay: {currentDate.day}");
+            dateLabel.SetText(DateToString());
         }
     }
-
     
-    void LogDate()
+    private string DateToString()
     {
-        Debug.Log($"Day: {currentDate.day}, Day of Week: {currentDate.dayOfWeek}, Season: {currentDate.season}");
+        return $"{currentDate.dayOfWeek}, {currentDate.season} Day {currentDate.day}";
     }
 }

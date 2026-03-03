@@ -8,21 +8,29 @@ public class MoneyUI : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.Funds.OnFundsChanged += UpdateUI;
+        if (GameManager.Instance?.Funds != null)
+            GameManager.Instance.Funds.OnFundsChanged += UpdateUI;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.Funds.OnFundsChanged -= UpdateUI;
+        if (GameManager.Instance != null && GameManager.Instance.Funds != null)
+        {
+            GameManager.Instance.Funds.OnFundsChanged -= UpdateUI;
+        }
     }
 
     private void Start()
     {
-        UpdateUI(GameManager.Instance.Funds.Get());
+        if (GameManager.Instance?.Funds != null)
+            UpdateUI(GameManager.Instance.Funds.Get());
     }
 
     private void UpdateUI(int amount)
     {
-        moneyText.text = "Funds: $" + amount;
+        if (moneyText)
+        {
+            moneyText.SetText($"Money: ${amount}");
+        }
     }
 }
