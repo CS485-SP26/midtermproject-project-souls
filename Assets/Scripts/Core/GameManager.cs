@@ -25,10 +25,13 @@ namespace Core
 
         private FundsManager fundsManager;
         private SeedsManager seedsManager; //added for seeds purchasing
+        private SeasonManager seasonManager;
 
         public FundsManager Funds => fundsManager;
         public SeedsManager Seeds => seedsManager; //added for seeds purchasing
 
+        public  SeasonManager Seasons => seasonManager;
+        
 
         void Awake()
         {
@@ -44,9 +47,13 @@ namespace Core
 
                 if (seedsManager == null) //added for seeds purchasing
                     seedsManager = GetComponent<SeedsManager>(); //added for seeds purchasing
+                
+                if (seasonManager == null)
+                    seasonManager = GetComponent<SeasonManager>();
 
                 fundsManager.Initialize(0);
                 seedsManager.Initialize(5); //added for seeds purchasing
+                seasonManager.Initialize();
                 Debug.Log("GameManager set through Awake");
             }
             else

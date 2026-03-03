@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\Shop\PurchaseItem.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
     <Compile Include="Assets\Scripts\Core\TileEvent.cs" />
+    <Compile Include="Assets\Scripts\Core\SeasonManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Scripts\Shop\BuySeedsTrigger.cs" />
     <Compile Include="Assets\Scripts\Shop\LoadShopScene.cs" />
