@@ -110,6 +110,7 @@ namespace Farming
             int value = harvestable.Harvest();
             Debug.Log("Harvested for " + value);
 
+            // we are adding funds directly rather than selling seeds for now
             // add funds to player
             if (FundsManager.Instance != null)
             {

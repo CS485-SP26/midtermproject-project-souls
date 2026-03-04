@@ -114,6 +114,7 @@ namespace Environment
                 Mathf.Min(visual.localScale.z, maxSize.z)
             );
 
+            // clamp + set fully grown
             if (visual.localScale.x >= maxSize.x &&
                 visual.localScale.y >= maxSize.y &&
                 visual.localScale.z >= maxSize.z)

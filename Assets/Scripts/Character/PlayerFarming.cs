@@ -64,7 +64,7 @@ namespace Character
                     }
                     break;
 
-                // used chatGPT and stackoverflow for formatting/debugging help - MS
+                // used chatGPT and stackoverflow for formatting/debugging help
                 case FarmTile.Condition.Watered:
                     if (SeedsManager.Instance == null)
                     {
@@ -73,7 +73,8 @@ namespace Character
                     }
                     Debug.Log("Seeds = " + SeedsManager.Instance.Get());
 
-                    if(SeedsManager.Instance.Get()==0)
+                    // replace true with (SeedsManager.Instance.Get() > 0) once testing done
+                    if(true)
                     {
                         //SeedsManager.Instance.Set(SeedsManager.Instance.Get() - 1);
                         animatedController.SetTrigger("Plant");
