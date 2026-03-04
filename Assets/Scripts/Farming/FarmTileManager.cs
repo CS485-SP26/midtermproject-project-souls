@@ -22,6 +22,7 @@ namespace Farming
         {
             Debug.Assert(farmTilePrefab, "FarmTileManager requires a farmTilePrefab");
             Debug.Assert(dayController, "FarmTileManager requires a dayController");
+            Debug.Assert(progressBar, "FarmTileManager requires a progressBar"); 
             UpdateProgressBar();
         }
 
@@ -56,6 +57,9 @@ namespace Farming
 
         public void UpdateProgressBar()
         {
+            
+            if(!progressBar) return;
+            
             int readyCount = 0;
             foreach (FarmTile farmTile in tiles)
             {
@@ -83,10 +87,16 @@ namespace Farming
                     clone.name = "Farm Tile " + count++.ToString();
                     spawnPos.x += clone.transform.localScale.x + tileGap;
                     clone.transform.parent = transform; // build heirarchy
-                    tiles.Add(clone.GetComponent<FarmTile>()); // for resize/delete
+                    var tile = clone.GetComponent<FarmTile>();
+                    //Debug.Assert(tile, $"farmTilePrefab is missing a FarmTile component on {clone.name}");
+                    if (tile) tiles.Add(tile);
                 }
-                spawnPos.z += clone.transform.localScale.z + tileGap;
-                spawnPos.x = transform.position.x;
+
+                if (clone != null)
+                {
+                    spawnPos.z += clone.transform.localScale.z + tileGap;
+                    spawnPos.x = transform.position.x;
+                }
             }
             
             

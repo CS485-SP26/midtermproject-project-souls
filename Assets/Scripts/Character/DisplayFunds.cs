@@ -23,6 +23,9 @@ public class MoneyUI : MonoBehaviour
 
     private void UpdateUI(int amount)
     {
-        moneyText.text = "Funds: $" + amount;
+        if (moneyText)
+        {
+            moneyText.SetText($"Money: ${amount}");
+        }
     }
 }
