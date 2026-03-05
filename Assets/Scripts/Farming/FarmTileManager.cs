@@ -14,7 +14,7 @@ namespace Farming
         [SerializeField] private int cols = 4;
         [SerializeField] private float tileGap = 0.1f;
         [SerializeField] private GameObject plantPrefab; // Added to spawn saved plants
-        public List<FarmTile> tiles = new List<FarmTile>(); //changed from private to public for tileevent.cs
+        private List<FarmTile> tiles = new List<FarmTile>();
         
         public GameObject PlantPrefab => plantPrefab;
         public SimpleProgressBar progressBar;
@@ -73,6 +73,35 @@ namespace Farming
                 count--;
             }
         }
+        public int ConfirmCount()
+        {
+            
+            int countTiles = 0;
+            foreach (FarmTile farmTile in tiles)
+            {
+                if(farmTile.GetCondition == FarmTile.Condition.Grass)
+                {
+                    countTiles++;
+                }
+            }
+            //Debug.Log("tiles counted: " + countTiles);
+            return countTiles;
+        }
+
+        public int ConfirmTiles()
+        {
+            int wetTiles = 0;
+
+            foreach (FarmTile farmTile in tiles)
+            {
+                if(farmTile.GetCondition == FarmTile.Condition.Watered)
+                {
+                    wetTiles++;
+                }
+            }
+
+            return wetTiles;
+        }
 
         public void UpdateProgressBar()
         {
@@ -117,7 +146,6 @@ namespace Farming
                     spawnPos.x = transform.position.x;
                 }
             }
-            
             
         }
 
