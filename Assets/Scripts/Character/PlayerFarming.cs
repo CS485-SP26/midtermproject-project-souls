@@ -1,15 +1,10 @@
-using Art.UI.ProgressBar;
 using UnityEngine;
 using Farming;
 using TMPro;
 using Core;
-using System.ComponentModel;
-using Unity.VisualScripting;
 using UnityEngine.Events;
-using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using System.Collections;
-using System;
+
 //using System.Diagnostics;
 
 namespace Character
@@ -42,7 +37,11 @@ namespace Character
 
         [Header("Funds")]
         [SerializeField] private TMP_Text fundsText;
-
+        
+        [Header("Seeds")]
+        [SerializeField] private TMP_Text seedsText;
+        [SerializeField] private int startingSeeds = 5;
+        
         private GameObject currentToolInstance;
         [SerializeField] private GameObject plantPrefab;
 
@@ -55,22 +54,26 @@ namespace Character
 
         private void Start()
         {
+            
             animatedController = GetComponent<AnimatedController>();
-            //Debug.Assert(GameManager.Instance != null, "PlayerFarming requires GameManager to be initialized");
-
-            if (fundsText != null && GameManager.Instance != null)
-            {
-                fundsText.text = "Funds: $" + GameManager.Instance.GetFunds();
-            }
             originalTimer = staminaRegenTimer;
             staminaCap = staminaLevel;
             waterCap = waterLevel;
-            
-            // Initialize UI
-            // UpdateWaterUI();
-
             SetTool("None");
             waterLevelUI.SetFill(waterLevel);
+            SeedsManager.Instance.Set(startingSeeds);
+            
+            
+            if (fundsText != null && GameManager.Instance != null)
+            {
+                fundsText.SetText("Funds: $" + GameManager.Instance.GetFunds());
+            }
+            
+            if (seedsText != null && GameManager.Instance != null)
+            {
+                seedsText.SetText("Seeds: " + SeedsManager.Instance.Get());
+            }
+            
         }
 
         public void AttemptInteraction(FarmTile tile)
@@ -115,6 +118,7 @@ namespace Character
                         {
                             SeedsManager.Instance.Set(SeedsManager.Instance.Get() - 1); 
                             animatedController.SetTrigger("Plant");
+                            seedsText.SetText("Seeds: " + SeedsManager.Instance.Get());
                             tile.Plant(plantPrefab);
                             staminaLevel -= 0.05f;
                             StartCoroutine(BarRolldown(staminaUI, staminaLevel, staminaLevel -= 0.05f));                            

@@ -1,5 +1,6 @@
 using Environment;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 public class SeasonManager : MonoBehaviour
@@ -41,6 +42,22 @@ public class SeasonManager : MonoBehaviour
     
     [SerializeField] private DayController dayController;
     [SerializeField] private TMP_Text dateLabel;    
+    
+    [Header("Temperature")]
+    [SDCurve(-20f, 40f, "Season", "Temperature (°C)")]
+    [SerializeField] private EnvironmentCurve temperatureCurve;
+
+    public float GetCurrentTemperature()
+    {
+        if (temperatureCurve == null) return 0f;
+        return temperatureCurve.SampleMean(percentYearPassed);
+    }
+
+    public float GetCurrentTemperatureSD()
+    {
+        if (temperatureCurve == null) return 0f;
+        return temperatureCurve.SampleSD(percentYearPassed);
+    }
     
     void OnEnable()
     {
