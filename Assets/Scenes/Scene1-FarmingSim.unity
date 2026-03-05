@@ -2048,6 +2048,7 @@ MonoBehaviour:
   stepAudio: {fileID: 339413452}
   tillAudio: {fileID: 339413451}
   waterAudio: {fileID: 339413450}
+  id: -1
 --- !u!82 &339413450
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2480,6 +2481,7 @@ MonoBehaviour:
   stepAudio: {fileID: 405254837}
   tillAudio: {fileID: 405254836}
   waterAudio: {fileID: 405254835}
+  id: -1
 --- !u!82 &405254835
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3230,6 +3232,7 @@ MonoBehaviour:
   staminaDepletion: 0.1
   staminaRegenTimer: 2
   fundsText: {fileID: 1453413617}
+  plantPrefab: {fileID: 1153927004267117924, guid: 69f071f1dc56ec0459d1fff4f4494019, type: 3}
   interacting:
     m_PersistentCalls:
       m_Calls:
@@ -3633,6 +3636,7 @@ MonoBehaviour:
   stepAudio: {fileID: 603624667}
   tillAudio: {fileID: 603624666}
   waterAudio: {fileID: 603624665}
+  id: -1
 --- !u!82 &603624665
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4405,6 +4409,7 @@ MonoBehaviour:
   stepAudio: {fileID: 680322916}
   tillAudio: {fileID: 680322915}
   waterAudio: {fileID: 680322914}
+  id: -1
 --- !u!82 &680322914
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6723,6 +6728,7 @@ MonoBehaviour:
   rows: 3
   cols: 2
   tileGap: 0.62
+  plantPrefab: {fileID: 0}
   progressBar: {fileID: 298155411}
 --- !u!1 &1173793392
 GameObject:
@@ -7276,7 +7282,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DayNightControl
   sunLight: {fileID: 410087040}
-  dayLabel: {fileID: 555931015}
   dayLengthSeconds: 60
   dayProgressSeconds: 0
   currentDay: 1
@@ -7374,6 +7379,7 @@ MonoBehaviour:
   stepAudio: {fileID: 1313422815}
   tillAudio: {fileID: 1313422814}
   waterAudio: {fileID: 1313422813}
+  id: -1
 --- !u!82 &1313422813
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8738,6 +8744,7 @@ MonoBehaviour:
   stepAudio: {fileID: 1497823277}
   tillAudio: {fileID: 1497823276}
   waterAudio: {fileID: 1497823275}
+  id: -1
 --- !u!82 &1497823275
 AudioSource:
   m_ObjectHideFlags: 0
@@ -10793,6 +10800,7 @@ MonoBehaviour:
         m_CallState: 2
   manager: {fileID: 1135064477}
   interactCheck: {fileID: 431992761}
+  tileIndex: 0
 --- !u!1 &1834998856
 GameObject:
   m_ObjectHideFlags: 0

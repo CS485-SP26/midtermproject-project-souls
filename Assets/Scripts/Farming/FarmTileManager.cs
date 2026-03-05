@@ -14,7 +14,7 @@ namespace Farming
         [SerializeField] private int rows = 4;
         [SerializeField] private int cols = 4;
         [SerializeField] private float tileGap = 0.1f;
-        //[SerializeField] private GameObject plantPrefab; // Added to spawn saved plants
+        [SerializeField] private GameObject plantPrefab; // Added to spawn saved plants
         private List<FarmTile> tiles = new List<FarmTile>();
         
         public GameObject PlantPrefab => plantPrefab;
@@ -94,7 +94,7 @@ namespace Farming
 
             foreach (FarmTile farmTile in tiles)
             {
-                if(farmTile.GetCondition == FarmTile.Condition.Watered)
+                if(farmTile.GetCondition == FarmTile.Condition.Watered || farmTile.GetCondition == FarmTile.Condition.Planted)
                 {
                     wetTiles++;
                 }

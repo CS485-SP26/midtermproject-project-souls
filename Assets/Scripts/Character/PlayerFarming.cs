@@ -116,16 +116,14 @@ namespace Character
                             SeedsManager.Instance.Set(SeedsManager.Instance.Get() - 1); 
                             animatedController.SetTrigger("Plant");
                             tile.Plant(plantPrefab);
-                            staminaLevel -= staminaDepletion;
-                            StartCoroutine(BarRolldown(staminaUI, staminaLevel, staminaLevel -= staminaDepletion));                            
+                            staminaLevel -= 0.05f;
+                            StartCoroutine(BarRolldown(staminaUI, staminaLevel, staminaLevel -= 0.05f));                            
                         }
                         break;
                     
                     case FarmTile.Condition.Planted:
                         animatedController.SetTrigger("Harvest");
                         tile.Interact();
-                        staminaLevel -= staminaDepletion;
-                        StartCoroutine(BarRolldown(staminaUI, staminaLevel, staminaLevel -= staminaDepletion));
                         break;
 
                     default: break;

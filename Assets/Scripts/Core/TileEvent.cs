@@ -35,11 +35,11 @@ public class TileEvent : MonoBehaviour //this code could definitely be improved,
         if (manager == null || manager.ConfirmCount() == 0) return;
         //wetted = 0; // needs to be reset each time otherwise goes up every 10secs
 
-        Debug.Log("interactCheck has been tripped!");
+        //Debug.Log("interactCheck has been tripped!");
 
         wetted = manager.ConfirmTiles();
 
-        Debug.Log("wetted tiles: " + wetted);
+        //Debug.Log("wetted tiles: " + wetted);
 
         if(wetted == goal) //if we have as many wet tiles as the goal
         {
