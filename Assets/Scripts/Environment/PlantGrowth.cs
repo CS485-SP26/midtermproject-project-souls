@@ -33,18 +33,29 @@ namespace Environment
         [SerializeField] private int stepsPerDay = 10;
 
         private bool fullyGrown = false;
+        private bool isLoaded = false;
 
         void Start()
         {
             if (visual == null)
             {
-                Debug.LogError($"{gameObject.name}: visual NOT assigned!");
+                if (transform.childCount > 0)
+                {
+                    visual = transform.GetChild(0);
+                    Debug.Log($"{gameObject.name}: visual was naturally null, but was automatically assigned to first child '{visual.name}'");
+                }
+                else
+                {
+                    visual = transform;
+                    Debug.Log($"{gameObject.name}: visual was naturally null, but was automatically assigned to self");
+                }
+            }
+            
+            if (visual == null)
+            {
+                Debug.LogError($"{gameObject.name}: visual NOT assigned and no children found!");
                 enabled = false;
                 return;
-            }
-            else
-            {
-                Debug.Log($"{gameObject.name}: visual assigned as {visual.name}");
             }
 
             if (dayController == null)
@@ -62,8 +73,11 @@ namespace Environment
             dayController.dayPassedEvent.AddListener(OnDayPassed);
 
             dayDivisionSeconds = dayController.DayLengthSeconds / stepsPerDay;
-            visual.localScale = minSize;
             
+            if (!isLoaded)
+            {
+                visual.localScale = minSize;
+            }
         }
 
         void OnDestroy()
@@ -137,6 +151,31 @@ namespace Environment
 
             fullyGrown = false;
             return cropValue;
+        }
+
+        public void SetGrowthState(Vector3 savedScale, bool isFullyGrown)
+        {
+            if (visual == null)
+            {
+                if (transform.childCount > 0) visual = transform.GetChild(0);
+                else visual = transform;
+            }
+            
+            if (visual != null)
+            {
+                isLoaded = true;
+                visual.localScale = savedScale;
+                fullyGrown = isFullyGrown;
+                if (fullyGrown)
+                {
+                    visual.localScale = maxSize;
+                }
+            }
+        }
+
+        public Vector3 GetScale()
+        {
+            return visual != null ? visual.localScale : maxSize;
         }
 
         public int HarvestValue()

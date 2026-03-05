@@ -12,11 +12,13 @@ namespace Core
         private FundsManager fundsManager;
         private SeedsManager seedsManager; //added for seeds purchasing
         private SeasonManager seasonManager;
+        private TileDataManager tileDataManager;
 
         public FundsManager Funds => fundsManager;
         public SeedsManager Seeds => seedsManager; //added for seeds purchasing
 
-        public  SeasonManager Seasons => seasonManager;
+        public SeasonManager Seasons => seasonManager;
+        public TileDataManager TileData => tileDataManager;
         
 
         void Awake()
@@ -40,20 +42,23 @@ namespace Core
                 
             if (seasonManager == null)
                 seasonManager = GetComponent<SeasonManager>();
+                
+            if (tileDataManager == null)
+                tileDataManager = GetComponent<TileDataManager>();
 
-            fundsManager.Initialize(0);
-            seedsManager.Initialize(5); //added for seeds purchasing
-            seasonManager.Initialize();
+            if (fundsManager != null) fundsManager.Initialize(0);
+            if (seedsManager != null) seedsManager.Initialize(5); //added for seeds purchasing
+            if (seasonManager != null) seasonManager.Initialize();
             Debug.Log("GameManager set through Awake");
 
         }
 
-        public void AddFunds(int amount) => fundsManager.Add(amount);
-        public int GetFunds() => fundsManager.Get();
+        public void AddFunds(int amount) => fundsManager?.Add(amount);
+        public int GetFunds() => fundsManager != null ? fundsManager.Get() : 0;
 
 
-        public void AddSeeds(int amount) => seedsManager.Add(amount); //same idea as addfunds, added for seeds manager
-        public int GetSeeds() => seedsManager.Get(); //same idea as getfunds, added for seeds manager
+        public void AddSeeds(int amount) => seedsManager?.Add(amount); //same idea as addfunds, added for seeds manager
+        public int GetSeeds() => seedsManager != null ? seedsManager.Get() : 0;
 
         private int plants;
         public void AddPlants(int add)

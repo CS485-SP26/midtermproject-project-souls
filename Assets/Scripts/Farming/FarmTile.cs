@@ -29,8 +29,85 @@ namespace Farming
         private int daysSinceLastInteraction = 0;
         public FarmTile.Condition GetCondition { get { return tileCondition; } } // TODO: Consider what the set would do?
 
+        [HideInInspector] public int id = -1;
+        private bool isLoading = false;
+
+        public void LoadData()
+        {
+            isLoading = true;
+            if (GameManager.Instance != null && GameManager.Instance.TileData != null)
+            {
+                if (GameManager.Instance.TileData.TryGetTile(id, out var data))
+                {
+                    Debug.Log($"[FarmTile] LoadData - Tile {id} found data: Condition={data.condition}, HasPlant={data.hasPlant}, Scale={data.plantScale}");
+                    tileCondition = data.condition;
+                    daysSinceLastInteraction = data.daysSinceInteraction;
+                    
+                    if (data.hasPlant)
+                    {
+                        FarmTileManager manager = GetComponentInParent<FarmTileManager>();
+                        if (manager != null && manager.PlantPrefab != null)
+                        {
+                            Plant(manager.PlantPrefab);
+                            if (currentPlant != null)
+                            {
+                                var growth = currentPlant.GetComponent<PlantGrowth>();
+                                if (growth != null)
+                                {
+                                    growth.SetGrowthState(data.plantScale, data.plantFullyGrown);
+                                    SaveData(); // Ensures the correct scale overrides the Plant() default scale save
+                                }
+                            }
+                        }
+                    }
+
+                    UpdateVisual();
+                }
+                else
+                {
+                    Debug.Log($"[FarmTile] LoadData - Tile {id} found NO saved data in TileDataManager.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"[FarmTile] LoadData - Tile {id} failed. GameManager or TileDataManager is null!");
+            }
+            isLoading = false;
+        }
+
+        public void SaveData()
+        {
+            if (isLoading) return;
+
+            if (GameManager.Instance != null && GameManager.Instance.TileData != null && id >= 0)
+            {
+                bool hasPlant = currentPlant != null;
+                Vector3 scale = Vector3.zero;
+                bool isFullyGrown = false;
+
+                if (hasPlant)
+                {
+                    var growth = currentPlant.GetComponent<PlantGrowth>();
+                    if (growth != null)
+                    {
+                        scale = growth.GetScale();
+                        isFullyGrown = growth.CanHarvest();
+                    }
+                }
+
+                Debug.Log($"[FarmTile] SaveData - Tile {id} saving: Condition={tileCondition}, HasPlant={hasPlant}, Scale={scale}");
+                GameManager.Instance.TileData.SaveTile(id, tileCondition, daysSinceLastInteraction, hasPlant, scale, isFullyGrown);
+            }
+            else
+            {
+                if (id < 0) Debug.LogWarning("[FarmTile] SaveData skipped because ID is less than 0.");
+                else Debug.LogWarning("[FarmTile] SaveData skipped because GameManager or TileDataManager is null.");
+            }
+        }
+
         private GameObject currentPlant;
-        void Start()
+
+        void Awake()
         {
             tileRenderer = GetComponent<MeshRenderer>();
             Debug.Assert(tileRenderer, "FarmTile requires a MeshRenderer");
@@ -59,6 +136,7 @@ namespace Farming
                 case FarmTile.Condition.Planted: Harvest(); break;
             }
             daysSinceLastInteraction = 0;
+            SaveData();
         }
 
         public void Till()
@@ -91,7 +169,21 @@ namespace Farming
             Debug.Log("Tile world pos: " + transform.position);
 
             tileCondition = Condition.Planted;
+            
+            PlantGrowth growth = currentPlant.GetComponent<PlantGrowth>();
+            if (growth != null)
+            {
+                // Unsubscribe first just in case to clearly prevent duplicates, though this is a fresh plant
+                growth.OnSizeChanged.RemoveListener(OnPlantSizeChanged);
+                growth.OnSizeChanged.AddListener(OnPlantSizeChanged);
+            }
 
+            SaveData();
+        }
+
+        private void OnPlantSizeChanged(Vector3 newScale)
+        {
+            SaveData();
         }
 
         public void Harvest()
@@ -140,6 +232,7 @@ namespace Farming
                 case FarmTile.Condition.Grass: tileRenderer.material = grassMaterial; break;
                 case FarmTile.Condition.Tilled: tileRenderer.material = tilledMaterial; break;
                 case FarmTile.Condition.Watered: tileRenderer.material = wateredMaterial; break;
+                case FarmTile.Condition.Planted: tileRenderer.material = tilledMaterial; break;
             }
         }
 
@@ -168,6 +261,7 @@ namespace Farming
                 else if(tileCondition == FarmTile.Condition.Tilled) tileCondition = FarmTile.Condition.Grass;
             }
             UpdateVisual();
+            SaveData();
         }
     }
 }

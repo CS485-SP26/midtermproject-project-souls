@@ -13,8 +13,10 @@ namespace Farming
         [SerializeField] private int rows = 4;
         [SerializeField] private int cols = 4;
         [SerializeField] private float tileGap = 0.1f;
+        [SerializeField] private GameObject plantPrefab; // Added to spawn saved plants
         public List<FarmTile> tiles = new List<FarmTile>(); //changed from private to public for tileevent.cs
         
+        public GameObject PlantPrefab => plantPrefab;
         public SimpleProgressBar progressBar;
         private int tileCount = 0;
         
@@ -23,6 +25,23 @@ namespace Farming
             Debug.Assert(farmTilePrefab, "FarmTileManager requires a farmTilePrefab");
             Debug.Assert(dayController, "FarmTileManager requires a dayController");
             Debug.Assert(progressBar, "FarmTileManager requires a progressBar"); 
+
+            // Clear and repopulate the list based entirely on children to guarantee correct order
+            tiles.Clear();
+            tiles.AddRange(GetComponentsInChildren<FarmTile>());
+
+            Debug.Log($"[FarmTileManager] Start() - Found and registered {tiles.Count} tiles in hierarchy. Assigning explicit IDs...");
+
+            // Assign deterministic explicit IDs rather than relying on GameObject sibling index
+            for(int i = 0; i < tiles.Count; i++)
+            {
+                if (tiles[i] != null)
+                {
+                    tiles[i].id = i;
+                    tiles[i].LoadData();
+                }
+            }
+
             UpdateProgressBar();
         }
 
@@ -125,14 +144,17 @@ namespace Farming
         void ValidateGrid() 
         {
             if (!farmTilePrefab) return;
-            tiles.Clear();
-            foreach (Transform child in transform)
+            
+            // In play mode, we shouldn't be destroying and recreating the grid dynamically 
+            // since that would wipe out our loaded tiles.
+            if (Application.isPlaying) 
             {
-                if (child.gameObject.TryGetComponent<FarmTile>(out var tile))
-                {
-                    tiles.Add(tile);
-                }
+                Debug.Log("[FarmTileManager] ValidateGrid() ignored because Application is playing.");
+                return;
             }
+
+            tiles.Clear();
+            tiles.AddRange(GetComponentsInChildren<FarmTile>());
 
             int newCount = rows * cols;
 

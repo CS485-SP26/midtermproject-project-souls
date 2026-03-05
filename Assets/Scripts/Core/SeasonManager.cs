@@ -44,12 +44,18 @@ public class SeasonManager : MonoBehaviour
     
     void OnEnable()
     {
-        dayController.dayPassedSystem += AdvanceDate;
+        if (dayController != null)
+        {
+            dayController.dayPassedSystem += AdvanceDate;
+        }
     }
 
     void OnDisable()
     {
-        dayController.dayPassedSystem -= AdvanceDate;
+        if (dayController != null)
+        {
+            dayController.dayPassedSystem -= AdvanceDate;
+        }
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
