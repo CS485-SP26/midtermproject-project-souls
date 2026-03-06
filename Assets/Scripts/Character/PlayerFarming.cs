@@ -34,6 +34,7 @@ namespace Character
         [SerializeField] float staminaRegenTimer = 2f;
         private float originalTimer;
         private float staminaCap;
+        private bool isRegenerating = false;
 
         [Header("Funds")]
         [SerializeField] private TMP_Text fundsText;
@@ -85,11 +86,10 @@ namespace Character
                 switch (tile.GetCondition)
                 {
                     case FarmTile.Condition.Grass:
-                        busy = true; 
-                        animatedController.SetTrigger("Till"); 
+                        busy = true;
+                        animatedController.SetTrigger("Till");
                         tile.Interact();
-                        staminaLevel -= staminaDepletion;
-                        StartCoroutine(BarRolldown(staminaUI, staminaLevel, staminaLevel -= staminaDepletion));
+                        StartCoroutine(ClearBusyAfterAnimation("Till"));
                         break;
                     case FarmTile.Condition.Tilled: 
                         if(waterLevel >= waterPerUse)
@@ -99,7 +99,6 @@ namespace Character
                             tile.Interact();
                             waterLevel -= waterPerUse;
                             StartCoroutine(BarRolldown(waterLevelUI, waterLevel, waterLevel -= waterPerUse));
-                            staminaLevel -= staminaDepletion;
                             StartCoroutine(BarRolldown(staminaUI, staminaLevel, staminaLevel -= staminaDepletion));
                             interacting?.Invoke(); //added for tileevent checking
                         }
@@ -113,14 +112,12 @@ namespace Character
                         }
                         Debug.Log("Seeds = " + SeedsManager.Instance.Get());
 
-                        // replace true with (SeedsManager.Instance.Get() > 0) once testing done
-                        if(true)
+                        if (SeedsManager.Instance.Get() > 0)
                         {
                             SeedsManager.Instance.Set(SeedsManager.Instance.Get() - 1); 
                             animatedController.SetTrigger("Plant");
-                            seedsText.SetText("Seeds: " + SeedsManager.Instance.Get());
+                            if (seedsText != null) seedsText.SetText("Seeds: " + SeedsManager.Instance.Get());
                             tile.Plant(plantPrefab);
-                            staminaLevel -= 0.05f;
                             StartCoroutine(BarRolldown(staminaUI, staminaLevel, staminaLevel -= 0.05f));                            
                         }
                         break;
@@ -147,6 +144,7 @@ namespace Character
                 case "WaterCan": waterCan.gameObject.SetActive(true); break;
             }
         }    
+        
         private void FixedUpdate() //stamina regeneration logic
         {
             if(busy) //if busy, reset the timer
@@ -157,16 +155,18 @@ namespace Character
             { StartCoroutine(RegenStamina()); }   
         }
 
-        private IEnumerator RegenStamina() //does NOT use a copy of the values passed into the function, changing stamina levels directly
+        private IEnumerator RegenStamina()
         {
-            float speed = 5f;
+            if (isRegenerating) yield break;
+            isRegenerating = true;
 
-            while(staminaLevel != staminaCap)
+            while (staminaLevel < staminaCap)
             {
-                staminaLevel = Mathf.MoveTowards(staminaLevel, staminaCap, Time.fixedDeltaTime / speed);
+                staminaLevel = Mathf.MoveTowards(staminaLevel, staminaCap, Time.fixedDeltaTime / 2f);
                 staminaUI.SetFill(staminaLevel);
                 yield return null;
             }
+            isRegenerating = false;
         }
 
         private IEnumerator BarRolldown(DepletingBar bar, float originalValue, float changeToValue) //visually show bars depleting or increasing gradually instead of all at once, look up coroutines unity to figure out how the updating works
@@ -192,6 +192,15 @@ namespace Character
                 yield return null;
             }
 
+        }
+        
+        private IEnumerator ClearBusyAfterAnimation(string stateName)
+        {
+            // Wait for animator to enter the state
+            yield return null;
+            while (animatedController.IsPlayingState(stateName))
+                yield return null;
+            busy = false;
         }
     }
 }
