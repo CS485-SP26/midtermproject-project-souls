@@ -60,6 +60,10 @@ namespace Core
         public void AddSeeds(int amount) => seedsManager?.Add(amount); //same idea as addfunds, added for seeds manager
         public int GetSeeds() => seedsManager != null ? seedsManager.Get() : 0;
 
+        private float currentWaterLevel = 1.0f;
+        public float GetWaterLevel() => currentWaterLevel;
+        public void SetWaterLevel(float level) => currentWaterLevel = level;
+
         private int plants;
         public void AddPlants(int add)
         {

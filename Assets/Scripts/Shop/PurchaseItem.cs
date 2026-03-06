@@ -9,7 +9,10 @@ public class PurchaseItem : MonoBehaviour
         if(FundsManager.Instance.Amount >= 20) //check if we have enough money to purchase the seeds, must be 20 or higher
         {
             FundsManager.Instance.Add(-20);
-            SeedsManager.Instance.Add(1);
+            if (GameManager.Instance != null && GameManager.Instance.Seeds != null)
+            {
+                GameManager.Instance.Seeds.Add(1);
+            }
         }
     }
 

@@ -41,7 +41,38 @@ public class SeasonManager : MonoBehaviour
                                        (float)(numberOfSeasons * daysPerSeason);
     
     [SerializeField] private DayController dayController;
-    [SerializeField] private TMP_Text dateLabel;    
+    private TMP_Text dateLabel;
+    
+    public float savedDayProgressSeconds = 0f;
+    public int savedCurrentDay = 1;
+    
+    public void SetDayController(DayController dc)
+    {
+        if (dayController != null)
+        {
+            dayController.dayPassedSystem -= AdvanceDate;
+        }
+        dayController = dc;
+        if (dayController != null)
+        {
+            dayController.dayPassedSystem += AdvanceDate;
+            dayController.RestoreTime(savedDayProgressSeconds, savedCurrentDay);
+        }
+        
+        // Dynamically find the date label in the scene to avoid Inspector setup
+        var labelObj = GameObject.Find("DayLabel");
+        if (labelObj != null)
+        {
+            dateLabel = labelObj.GetComponent<TMP_Text>();
+            dateLabel.SetText(DateToString());
+        }
+    }
+
+    public void SaveTime(float progress, int day)
+    {
+        savedDayProgressSeconds = progress;
+        savedCurrentDay = day;
+    }
     
     [Header("Environment Curves")]
     [Header("Temperature")]
@@ -64,27 +95,18 @@ public class SeasonManager : MonoBehaviour
     
     void OnEnable()
     {
-        if (dayController != null)
-        {
-            dayController.dayPassedSystem += AdvanceDate;
-        }
+        // Handled by SetDayController now
     }
 
     void OnDisable()
     {
-        if (dayController != null)
-        {
-            dayController.dayPassedSystem -= AdvanceDate;
-        }
+        // Handled by SetDayController now
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (dateLabel)
-        {
-            dateLabel.SetText(DateToString());
-        }
+        // Handled by SetDayController now
     }
 
     // Update is called once per frame

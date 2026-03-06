@@ -47,6 +47,7 @@ namespace Character
        
         [Header("Seeds")]
         [SerializeField] private GameObject[] plantPrefabs;
+        public GameObject[] PlantPrefabs => plantPrefabs;
         private int selectedPlantIndex = 0;
 
         [Header("Events")] //added for stamina meter and quest checking
@@ -61,10 +62,15 @@ namespace Character
             animatedController = GetComponent<AnimatedController>();
             originalTimer = staminaRegenTimer;
             staminaCap = staminaLevel;
-            waterCap = waterLevel;
+            waterCap = 1f;
+            
+            if (GameManager.Instance != null)
+            {
+                waterLevel = GameManager.Instance.GetWaterLevel();
+            }
+
             SetTool("None");
             waterLevelUI.SetFill(waterLevel);
-            SeedsManager.Instance.Set(startingSeeds);
             
             
             if (fundsText != null && GameManager.Instance != null)
@@ -72,9 +78,9 @@ namespace Character
                 fundsText.SetText("Funds: $" + GameManager.Instance.GetFunds());
             }
             
-            if (seedsText != null && GameManager.Instance != null)
+            if (seedsText != null && GameManager.Instance != null && GameManager.Instance.Seeds != null)
             {
-                seedsText.SetText("Seeds: " + SeedsManager.Instance.Get());
+                seedsText.SetText("Seeds: " + GameManager.Instance.Seeds.Get());
             }
             
         }
@@ -101,22 +107,23 @@ namespace Character
                             tile.Interact();
                             waterLevel -= waterPerUse;
                             StartCoroutine(BarRolldown(waterLevelUI, waterLevel, waterLevel -= waterPerUse));
+                            if (GameManager.Instance != null) GameManager.Instance.SetWaterLevel(waterLevel);
                             StartCoroutine(BarRolldown(staminaUI, staminaLevel, staminaLevel -= staminaDepletion));
                             interacting?.Invoke(); //added for tileevent checking
                         }
                         break;
                     // used chatGPT and stackoverflow for formatting/debugging help
                     case FarmTile.Condition.Watered:
-                        if (SeedsManager.Instance == null)
+                        if (GameManager.Instance == null || GameManager.Instance.Seeds == null)
                         {
                             Debug.LogError("SeedsManager missing");
                             return;
                         }
-                        if (SeedsManager.Instance.Get() > 0)
+                        if (GameManager.Instance.Seeds.Get() > 0)
                         {
-                            SeedsManager.Instance.Set(SeedsManager.Instance.Get() - 1);
+                            GameManager.Instance.Seeds.Set(GameManager.Instance.Seeds.Get() - 1);
                             animatedController.SetTrigger("Plant");
-                            seedsText.SetText("Seeds: " + SeedsManager.Instance.Get());
+                            seedsText.SetText("Seeds: " + GameManager.Instance.Seeds.Get());
                             tile.Plant(plantPrefabs[selectedPlantIndex]);
                             staminaLevel -= 0.05f;
                             StartCoroutine(BarRolldown(staminaUI, staminaLevel, staminaLevel -= 0.05f));
@@ -192,6 +199,8 @@ namespace Character
                 waterLevelUI.SetFill(waterLevel);
                 yield return null;
             }
+
+            if (GameManager.Instance != null) GameManager.Instance.SetWaterLevel(waterLevel);
 
         }
         

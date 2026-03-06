@@ -45,10 +45,35 @@ namespace Farming
                     
                     if (data.hasPlant)
                     {
-                        FarmTileManager manager = GetComponentInParent<FarmTileManager>();
-                        if (manager != null && manager.PlantPrefab != null)
+                        GameObject prefabToPlant = null;
+                        
+                        // Try to find the specific plant prefab from PlayerFarming
+                        Character.PlayerFarming playerFarming = FindFirstObjectByType<Character.PlayerFarming>();
+                        if (playerFarming != null && playerFarming.PlantPrefabs != null)
                         {
-                            Plant(manager.PlantPrefab);
+                            foreach (GameObject p in playerFarming.PlantPrefabs)
+                            {
+                                if (p != null && (p.name == data.plantPrefabName || p.name + "(Clone)" == data.plantPrefabName))
+                                {
+                                    prefabToPlant = p;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Fallback to FarmTileManager's set prefab if not found by name
+                        if (prefabToPlant == null)
+                        {
+                            FarmTileManager manager = GetComponentInParent<FarmTileManager>();
+                            if (manager != null)
+                            {
+                                prefabToPlant = manager.PlantPrefab;
+                            }
+                        }
+
+                        if (prefabToPlant != null)
+                        {
+                            Plant(prefabToPlant);
                             if (currentPlant != null)
                             {
                                 var growth = currentPlant.GetComponent<PlantGrowth>();
@@ -82,11 +107,13 @@ namespace Farming
             if (GameManager.Instance != null && GameManager.Instance.TileData != null && id >= 0)
             {
                 bool hasPlant = currentPlant != null;
+                string prefabName = "";
                 Vector3 scale = Vector3.zero;
                 bool isFullyGrown = false;
 
                 if (hasPlant)
                 {
+                    prefabName = currentPlant.name.Replace("(Clone)", "").Trim();
                     var growth = currentPlant.GetComponent<PlantGrowth>();
                     if (growth != null)
                     {
@@ -96,7 +123,7 @@ namespace Farming
                 }
 
                 Debug.Log($"[FarmTile] SaveData - Tile {id} saving: Condition={tileCondition}, HasPlant={hasPlant}, Scale={scale}");
-                GameManager.Instance.TileData.SaveTile(id, tileCondition, daysSinceLastInteraction, hasPlant, scale, isFullyGrown);
+                GameManager.Instance.TileData.SaveTile(id, tileCondition, daysSinceLastInteraction, hasPlant, prefabName, scale, isFullyGrown);
             }
             else
             {

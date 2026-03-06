@@ -25,6 +25,29 @@ namespace Environment
 
         public event Action dayPassedSystem;
 
+        void Start()
+        {
+            if (Core.GameManager.Instance != null && Core.GameManager.Instance.Seasons != null)
+            {
+                Core.GameManager.Instance.Seasons.SetDayController(this);
+            }
+        }
+
+        void OnDestroy()
+        {
+            if (Core.GameManager.Instance != null && Core.GameManager.Instance.Seasons != null)
+            {
+                Core.GameManager.Instance.Seasons.SaveTime(dayProgressSeconds, currentDay);
+            }
+        }
+
+        public void RestoreTime(float savedSeconds, int savedDay)
+        {
+            dayProgressSeconds = savedSeconds;
+            currentDay = savedDay;
+            UpdateVisuals();
+        }
+
         public void AdvanceDay()
         {
             Debug.Assert(sunLight, "DayController requires a 'Sun'");
