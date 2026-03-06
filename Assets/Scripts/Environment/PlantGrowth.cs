@@ -32,8 +32,25 @@ namespace Environment
         [SerializeField] private Vector3 maxSize = new Vector3(1f, 1f, 1f);
         [SerializeField] private int stepsPerDay = 10;
 
+        [SerializeField] private Vector2 temperatureRange = new Vector2(0f, 30f); //  temperature range for growth
+        [SerializeField] private Vector2 moistureRange = new Vector2(0.2f, 0.8f); //  moisture range for growth
+        [SerializeField] private Vector2 sunlightRange = new Vector2(0.5f, 1f); //  sunlight range for growth
+        
+        [Header("Quality Settings")]
+        [SerializeField] private float minQualityMultiplier = 0.3f; // worst case: 30% value
+
+        private float accumulatedQuality = 0f;
+        private int qualitySamples = 0;
+
+        
         private bool fullyGrown = false;
         private bool isLoaded = false;
+        
+        
+        private SeasonManager seasonManager;
+        private float currentTemp;
+        private float currentMoisture;
+        private float currentSunlight;
 
         void Start()
         {
@@ -78,6 +95,17 @@ namespace Environment
             {
                 visual.localScale = minSize;
             }
+            
+            seasonManager = FindFirstObjectByType<SeasonManager>();
+            if (!seasonManager)
+            {
+                Debug.LogError("SeasonManager not found");
+                enabled = false;
+            }
+            
+            currentTemp = seasonManager.GetCurrentTemperature();
+            currentMoisture = seasonManager.GetCurrentMoisture();
+            currentSunlight = seasonManager.GetCurrentSunlight();
         }
 
         void OnDestroy()
@@ -85,9 +113,14 @@ namespace Environment
             if(dayController!=null)
                 dayController.dayPassedEvent.RemoveListener(OnDayPassed);
         }
+        
         void OnDayPassed()
         {
             currentGrowth++;
+            currentTemp = seasonManager.GetCurrentTemperature();
+            currentMoisture = seasonManager.GetCurrentMoisture();
+            currentSunlight = seasonManager.GetCurrentSunlight();
+            SampleQuality(currentTemp, currentMoisture, currentSunlight);
         }
 
         void Update()
@@ -137,7 +170,9 @@ namespace Environment
                 fullyGrown = true;
                 Debug.Log("Plant fully grown");
             }
-
+            
+            // Debug the quality multiplier for testing
+            Debug.Log($"Accumulated Quality: {accumulatedQuality}, Samples: {qualitySamples}, Multiplier: {GetQualityMultiplier()}");
         }
 
         public bool CanHarvest()
@@ -148,9 +183,8 @@ namespace Environment
         public int Harvest()
         {
             if (!fullyGrown) return 0;
-
             fullyGrown = false;
-            return cropValue;
+            return Mathf.RoundToInt(cropValue * GetQualityMultiplier());
         }
 
         public void SetGrowthState(Vector3 savedScale, bool isFullyGrown)
@@ -182,5 +216,40 @@ namespace Environment
         {
             return 5; // temp hard coded plant value for testing
         }
+        
+        private void SampleQuality(float temperature, float moisture, float sunlight)
+        {
+            float tempScore  = ScoreFactor(temperature, temperatureRange);
+            float moistScore = ScoreFactor(moisture, moistureRange);
+            float sunScore   = ScoreFactor(sunlight, sunlightRange);
+
+            float stepQuality = tempScore * moistScore * sunScore;
+            accumulatedQuality += stepQuality;
+            qualitySamples++;
+        }
+
+        // Returns 1.0 at the midpoint of the range, falls off toward the edges
+        private float ScoreFactor(float value, Vector2 range)
+        {
+            float mid = (range.x + range.y) * 0.5f;
+            float halfSpan = (range.y - range.x) * 0.5f;
+
+            if (halfSpan <= 0f) return 1f;
+
+            float distance = Mathf.Abs(value - mid) / halfSpan; // 0 at center, 1 at edge
+            float score = 1f - distance;                         // 1 at center, 0 at edge
+            return Mathf.Clamp(score, 0f, 1f);
+        }
+
+        // Call this instead of returning raw cropValue
+        public float GetQualityMultiplier()
+        {
+            if (qualitySamples == 0) return 1f;
+            float avgQuality = accumulatedQuality / qualitySamples;
+            // Remap so worst case is minQualityMultiplier, best is 1.0
+            return Mathf.Lerp(minQualityMultiplier, 1f, avgQuality);
+        }
     }
+    
+    
 }

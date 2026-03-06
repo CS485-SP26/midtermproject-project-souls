@@ -43,21 +43,24 @@ public class SeasonManager : MonoBehaviour
     [SerializeField] private DayController dayController;
     [SerializeField] private TMP_Text dateLabel;    
     
+    [Header("Environment Curves")]
     [Header("Temperature")]
     [SDCurve(-20f, 40f, "Season", "Temperature (°C)")]
     [SerializeField] private EnvironmentCurve temperatureCurve;
-
-    public float GetCurrentTemperature()
-    {
-        if (temperatureCurve == null) return 0f;
-        return temperatureCurve.SampleMean(percentYearPassed);
-    }
-
-    public float GetCurrentTemperatureSD()
-    {
-        if (temperatureCurve == null) return 0f;
-        return temperatureCurve.SampleSD(percentYearPassed);
-    }
+    [Header("Moisture")]
+    [SDCurve(0f, 100f, "Season", "Soil Moisture")]
+    [SerializeField] private EnvironmentCurve moistureCurve;
+    [Header("Sunlight")]
+    [SDCurve(0f, 100f, "Season", "Percent Sunlight")]
+    [SerializeField] private EnvironmentCurve sunlightCurve;
+    
+    public float GetCurrentTemperature() => temperatureCurve.SampleValue(percentYearPassed);
+    public float GetCurrentMoisture() => moistureCurve.SampleValue(percentYearPassed);
+    public float GetCurrentSunlight() => sunlightCurve.SampleValue(percentYearPassed);
+    
+    float currentTemperature;
+    float currentMoisture;
+    float currentSunlight;
     
     void OnEnable()
     {
@@ -111,6 +114,10 @@ public class SeasonManager : MonoBehaviour
         {
             dateLabel.SetText(DateToString());
         }
+        
+        currentTemperature = GetCurrentTemperature();
+        currentMoisture = GetCurrentMoisture();
+        currentSunlight = GetCurrentSunlight();
     }
     
     private string DateToString()

@@ -44,8 +44,10 @@ namespace Character
         [SerializeField] private int startingSeeds = 5;
         
         private GameObject currentToolInstance;
-        [SerializeField] private GameObject plantPrefab;
-
+       
+        [Header("Seeds")]
+        [SerializeField] private GameObject[] plantPrefabs;
+        private int selectedPlantIndex = 0;
 
         [Header("Events")] //added for stamina meter and quest checking
         public UnityEvent interacting = new UnityEvent();
@@ -110,15 +112,14 @@ namespace Character
                             Debug.LogError("SeedsManager missing");
                             return;
                         }
-                        Debug.Log("Seeds = " + SeedsManager.Instance.Get());
-
                         if (SeedsManager.Instance.Get() > 0)
                         {
-                            SeedsManager.Instance.Set(SeedsManager.Instance.Get() - 1); 
+                            SeedsManager.Instance.Set(SeedsManager.Instance.Get() - 1);
                             animatedController.SetTrigger("Plant");
-                            if (seedsText != null) seedsText.SetText("Seeds: " + SeedsManager.Instance.Get());
-                            tile.Plant(plantPrefab);
-                            StartCoroutine(BarRolldown(staminaUI, staminaLevel, staminaLevel -= 0.05f));                            
+                            seedsText.SetText("Seeds: " + SeedsManager.Instance.Get());
+                            tile.Plant(plantPrefabs[selectedPlantIndex]);
+                            staminaLevel -= 0.05f;
+                            StartCoroutine(BarRolldown(staminaUI, staminaLevel, staminaLevel -= 0.05f));
                         }
                         break;
                     
@@ -201,6 +202,18 @@ namespace Character
             while (animatedController.IsPlayingState(stateName))
                 yield return null;
             busy = false;
+        }
+        
+        public void SelectNextPlant()
+        {
+            selectedPlantIndex = (selectedPlantIndex + 1) % plantPrefabs.Length;
+            Debug.Log($"Selected: {plantPrefabs[selectedPlantIndex].name}");
+        }
+
+        public void SelectPlant(int index)
+        {
+            if (index >= 0 && index < plantPrefabs.Length)
+                selectedPlantIndex = index;
         }
     }
 }

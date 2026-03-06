@@ -3482,7 +3482,10 @@ MonoBehaviour:
   fundsText: {fileID: 1453413617}
   seedsText: {fileID: 1718051435}
   startingSeeds: 5
-  plantPrefab: {fileID: 1153927004267117924, guid: 69f071f1dc56ec0459d1fff4f4494019, type: 3}
+  plantPrefabs:
+  - {fileID: 1153927004267117924, guid: 69f071f1dc56ec0459d1fff4f4494019, type: 3}
+  - {fileID: 1153927004267117924, guid: ee24d9a32f4e48b4388d4a216b009911, type: 3}
+  - {fileID: 1153927004267117924, guid: 1b5fb4608f850044e893e7f752ebf204, type: 3}
   interacting:
     m_PersistentCalls:
       m_Calls:
@@ -4640,6 +4643,34 @@ MonoBehaviour:
       time: 0.625
     - mean: -1.9999993
       stdDev: 7.3999996
+      time: 0.875
+  moistureCurve:
+    points:
+    - mean: 68
+      stdDev: 17.333332
+      time: 0.125
+    - mean: 47.333332
+      stdDev: 29.333336
+      time: 0.375
+    - mean: 31.333334
+      stdDev: 14
+      time: 0.625
+    - mean: 39.333336
+      stdDev: 8.666668
+      time: 0.875
+  sunlightCurve:
+    points:
+    - mean: 58.666664
+      stdDev: 11.333332
+      time: 0.125
+    - mean: 78
+      stdDev: 15.333332
+      time: 0.375
+    - mean: 22
+      stdDev: 10.666666
+      time: 0.625
+    - mean: 18
+      stdDev: 8.666667
       time: 0.875
 --- !u!4 &670574061
 Transform:
