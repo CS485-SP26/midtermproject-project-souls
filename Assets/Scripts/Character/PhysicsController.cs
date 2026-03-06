@@ -56,14 +56,9 @@ namespace Character
 
         protected override void FixedUpdate()
         {
-            // 1. Movement & Rotation
             HandleMovement();
-            
-            // 2. Physics Cleanup
             ClampVelocity();
             ApplyDrag();
-            
-            // 3. Actions
             HandleJump();
         }
 
@@ -92,6 +87,13 @@ namespace Character
 
         #region 4. Movement Logic
 
+        public override Vector2 GetMovementVector()
+        {
+            // Return raw input so the animator reflects what the player is pressing,
+            // not the physics velocity (which lags, slides, etc.)
+            return Vector2.ClampMagnitude(_input.moveInput, 1f);
+        }
+        
         private void HandleMovement()
         {
             // Get raw input direction (World Space)
