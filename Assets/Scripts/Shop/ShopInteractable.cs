@@ -1,7 +1,7 @@
 using Character;
 using UnityEngine;
 
-public class ShopUI : MonoBehaviour, IInteractable, IUI
+public class ShopUI : MonoBehaviour, IInteractable
 {
     [SerializeField] private GameObject interactPrompt;
     [SerializeField] private GameObject shopUI;

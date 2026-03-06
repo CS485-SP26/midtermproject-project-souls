@@ -10,7 +10,6 @@ namespace Character
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private TileSelector tileSelector;
-        private IUI currentUI;
         private MovementController moveController;
         private AnimatedController animatedController;
         private PlayerFarming playerFarming;
@@ -23,7 +22,6 @@ namespace Character
             moveController = GetComponent<MovementController>();
             animatedController = GetComponent<AnimatedController>();
             playerFarming = GetComponent<PlayerFarming>();
-            currentUI = GetComponent<IUI>();
 
             Debug.Assert(moveController, "PlayerController requires a MovementController");
             Debug.Assert(playerFarming, "PlayerController requires PlayerFarming script");
@@ -44,18 +42,8 @@ namespace Character
             if(animatedController) animatedController.Jump();
         }
         
-        public void OnInteract(InputValue value)
+        private void OnInteract(InputValue value)
         {
-
-            // This if block stops left click from hitting any ui interactables
-            if (currentUI != null && currentUI.getOpen()) {      
-                
-            }
-            if (currentInteractable != null)
-            {
-                currentInteractable.Interact();
-                return;
-            }
             // Delegate the logic to the farming script
             FarmTile tile = tileSelector.GetSelectedTile(); //you HAVE to make sure the tile selector is set to player (raycaster) in the inspector!
             //Debug.Log(tileSelector.GetSelectedTile().gameObject.name + " recognized for OnInteract");
@@ -64,6 +52,14 @@ namespace Character
             playerFarming.AttemptInteraction(tile);
         }
 
+        private void OnOpen(InputValue value)
+        {
+            if (currentInteractable != null)
+            {
+                currentInteractable.Interact();
+                return;
+            }
+        }
         private void OnTriggerEnter(Collider other)
         {
             IInteractable interactable = other.GetComponent<IInteractable>();
