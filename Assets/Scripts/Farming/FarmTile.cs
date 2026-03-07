@@ -229,17 +229,8 @@ namespace Farming
             int value = harvestable.Harvest();
             Debug.Log("Harvested for " + value);
 
-            // we are adding funds directly rather than selling seeds for now
-            // add funds to player
-            if (FundsManager.Instance != null)
-            {
-                FundsManager.Instance.Add(value);
-                Debug.Log("Added " + value + " to player funds.");
-            }
-            else
-            {
-                Debug.LogWarning("FundsManager instance not found");
-            }    
+            //Adding plants to be sold
+            GameManager.Instance.AddPlants(1);  
 
             //remove the plant from the scene.
             Destroy(currentPlant);

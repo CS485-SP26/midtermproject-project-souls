@@ -63,12 +63,14 @@
     <Compile Include="Assets/Art/UI/ProgressBar/DepletingBar.cs" />
     <Compile Include="Assets/Art/Art Credits.cs" />
     <Compile Include="Assets/Scripts/Character/AnimatedController.cs" />
+    <Compile Include="Assets/Scripts/Quest/QuestUI.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_ExampleScript_01.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMPro_InstructionOverlay.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexShakeB.cs" />
     <Compile Include="Assets/Scripts/Core/AutoDestroy.cs" />
     <Compile Include="Assets/Scripts/Farming/IHarvestable.cs" />
     <Compile Include="Assets/Scripts/Shop/SellPlant.cs" />
+    <Compile Include="Assets/Scripts/Quest/Quest.cs" />
     <Compile Include="Assets/Scripts/Shop/LoadFarmScene.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexJitter.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_UiFrameRateCounter.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Assets/TutorialInfo/Scripts/Readme.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/Benchmark01.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TextMeshSpawner.cs" />
+    <Compile Include="Assets/Scripts/Quest/QuestEntries.cs" />
     <Compile Include="Assets/Art/UI/ProgressBar/SimpleProgressBar.cs" />
     <Compile Include="Assets/Scripts/Character/PlayerFarming.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/CameraController.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="Assets/Scripts/Character/TileSelector.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TextMeshProFloatingText.cs" />
     <Compile Include="Assets/Scripts/Character/RaydownSelector.cs" />
+    <Compile Include="Assets/Scripts/Quest/QuestManager.cs" />
     <Compile Include="Assets/Scripts/Character/DisplayFunds.cs" />
     <Compile Include="Assets/Scripts/Shop/FarmingTrigger.cs" />
     <Compile Include="Assets/Scripts/Environment/DayController.cs" />

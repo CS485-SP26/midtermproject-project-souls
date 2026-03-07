@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Core;
-
+using Quest;
 namespace Core
 {
     public class GameManager:MonoBehaviour //game manager has changes to it, specifically with compatibility to seedsManager which follows the same logic as fundsManager
@@ -13,7 +13,9 @@ namespace Core
         private SeedsManager seedsManager; //added for seeds purchasing
         private SeasonManager seasonManager;
         private TileDataManager tileDataManager;
+        private QuestManager questManager;
 
+        public QuestManager Quests => questManager;
         public FundsManager Funds => fundsManager;
         public SeedsManager Seeds => seedsManager; //added for seeds purchasing
 
@@ -46,6 +48,11 @@ namespace Core
             if (tileDataManager == null)
                 tileDataManager = GetComponent<TileDataManager>();
 
+            if (questManager == null)
+                questManager = GetComponent<QuestManager>();
+
+            
+            if (questManager != null) questManager.Initialize();
             if (fundsManager != null) fundsManager.Initialize(0);
             if (seedsManager != null) seedsManager.Initialize(5); //added for seeds purchasing
             if (seasonManager != null) seasonManager.Initialize();
