@@ -3,6 +3,7 @@ using UnityEngine;
 using Environment;
 using System;
 using Core;
+using Quest;
 
 namespace Farming
 {
@@ -31,7 +32,7 @@ namespace Farming
 
         [HideInInspector] public int id = -1;
         private bool isLoading = false;
-
+        
         public void LoadData()
         {
             isLoading = true;
@@ -225,6 +226,7 @@ namespace Farming
                 Debug.Log("Plant is not ready to harvest.");
                 return;
             }
+            
             //see plants value
             int value = harvestable.Harvest();
             Debug.Log("Harvested for " + value);

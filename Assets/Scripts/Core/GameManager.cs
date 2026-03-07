@@ -21,7 +21,6 @@ namespace Core
 
         public SeasonManager Seasons => seasonManager;
         public TileDataManager TileData => tileDataManager;
-        
 
         void Awake()
         {
@@ -72,8 +71,16 @@ namespace Core
         public void SetWaterLevel(float level) => currentWaterLevel = level;
 
         private int plants;
+        public bool firstHarvest = true;
+
         public void AddPlants(int add)
-        {
+        {   
+            QuestObject quest = GameManager.Instance.Quests.currentQuests.Find(q => q.questName == "Harvested!");
+            if (firstHarvest && quest != null){
+                quest.isCompleted = true;
+                GameManager.Instance.Funds.Add(50);
+                firstHarvest = false;
+            }
             plants = plants + add;
         }
         public int GetPlants() => plants;

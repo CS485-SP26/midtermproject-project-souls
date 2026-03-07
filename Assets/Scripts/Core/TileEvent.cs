@@ -14,7 +14,6 @@ public class TileEvent : MonoBehaviour //this code could definitely be improved,
     [SerializeField] private int tileIndex;
     int wetted = 0; //wetted is how many wet tiles there are
     int goal = -1; //goal is the amount of tiles total, set to -1 so this doesnt match wetted by default
-    QuestObject quest = GameManager.Instance.Quests.currentQuests.Find(q => q.questName == "Get Watering");
         private IEnumerator Start() // IEnumerator Start is called once before the first execution of Update after the MonoBehaviour is created and also lets you set a seconds delay
     {
         //wait until manager exists
@@ -51,6 +50,7 @@ public class TileEvent : MonoBehaviour //this code could definitely be improved,
 
     public void QuestRewardAddFunds() //note: this is called through a button and wont happen naturally
     {
+        QuestObject quest = GameManager.Instance.Quests.currentQuests.Find(q => q.questName == "Get Watering");
         FundsManager.Instance.Add(100);
         GameManager.Instance.Quests.CompleteQuest(quest);
     }

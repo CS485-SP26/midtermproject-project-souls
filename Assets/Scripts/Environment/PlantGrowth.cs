@@ -47,7 +47,7 @@ namespace Environment
         private bool fullyGrown = false;
         private bool isLoaded = false;
         
-        
+        bool firstHarvest = true;
         private SeasonManager seasonManager;
         private float currentTemp;
         private float currentMoisture;

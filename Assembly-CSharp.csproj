@@ -127,6 +127,7 @@
     <Compile Include="Assets/Scripts/Character/RaydownSelector.cs" />
     <Compile Include="Assets/Scripts/Quest/QuestManager.cs" />
     <Compile Include="Assets/Scripts/Character/DisplayFunds.cs" />
+    <Compile Include="Assets/Scripts/Quest/QuestComplete.cs" />
     <Compile Include="Assets/Scripts/Shop/FarmingTrigger.cs" />
     <Compile Include="Assets/Scripts/Environment/DayController.cs" />
   </ItemGroup>
