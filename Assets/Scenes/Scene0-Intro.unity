@@ -366,9 +366,13 @@ GameObject:
   - component: {fileID: 621266011}
   - component: {fileID: 621266010}
   - component: {fileID: 621266012}
+  - component: {fileID: 621266013}
+  - component: {fileID: 621266015}
+  - component: {fileID: 621266014}
+  - component: {fileID: 621266016}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -385,7 +389,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550bb88b207175a489376f2e8459d91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadScene
-  fundsManager: {fileID: 0}
 --- !u!4 &621266011
 Transform:
   m_ObjectHideFlags: 0
@@ -413,6 +416,101 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 637674fc4682f4db68f436542fb4e74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FundsManager
+--- !u!114 &621266013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621266009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8de59dfe413d6964a86af7a0e4ced95c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.SeedsManager
+--- !u!114 &621266014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621266009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff62ced0b6b7bfc4b897633a54bec989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.TileDataManager
+--- !u!114 &621266015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621266009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28cc0fcfe15ca9d43afbfd4107ffcd49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SeasonManager
+  dayController: {fileID: 0}
+  savedDayProgressSeconds: 0
+  savedCurrentDay: 1
+  temperatureCurve:
+    points:
+    - mean: 15
+      stdDev: 3
+      time: 0.125
+    - mean: 30
+      stdDev: 2
+      time: 0.375
+    - mean: 12
+      stdDev: 4
+      time: 0.625
+    - mean: -5
+      stdDev: 5
+      time: 0.875
+  moistureCurve:
+    points:
+    - mean: 15
+      stdDev: 3
+      time: 0.125
+    - mean: 30
+      stdDev: 2
+      time: 0.375
+    - mean: 12
+      stdDev: 4
+      time: 0.625
+    - mean: -5
+      stdDev: 5
+      time: 0.875
+  sunlightCurve:
+    points:
+    - mean: 15
+      stdDev: 3
+      time: 0.125
+    - mean: 30
+      stdDev: 2
+      time: 0.375
+    - mean: 12
+      stdDev: 4
+      time: 0.625
+    - mean: -5
+      stdDev: 5
+      time: 0.875
+--- !u!114 &621266016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621266009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eef6eed80232457eb5b0d3ce0e53ed9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Quest.QuestManager
+  currentQuests: []
+  completedQuests: []
 --- !u!1 &644770500
 GameObject:
   m_ObjectHideFlags: 0

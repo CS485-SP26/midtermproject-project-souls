@@ -8,5 +8,7 @@ namespace Farming
 
         //a function in plant.cs that returns the amount added to funds
         int HarvestValue();
+
+        int Harvest();
     }
 }

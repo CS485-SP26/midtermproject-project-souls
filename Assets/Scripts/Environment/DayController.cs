@@ -1,15 +1,15 @@
 using UnityEngine;
 using TMPro; // Important for TextMeshPro
 using UnityEngine.Events;
+using System;
 using Farming;
 
 namespace Environment 
 {
-    public class DayController : MonoBehaviour
+    public class DayController : MonoBehaviour //this has changes to match the professors lecture from 2/24/26
     {
         [Header("Object References")]
         [SerializeField] private Light sunLight;
-        [SerializeField] private TMP_Text dayLabel;
         
         [Header("Time Constraints")]
         [SerializeField] private float dayLengthSeconds = 60f;
@@ -19,27 +19,44 @@ namespace Environment
         // Properties
         public float DayProgressPercent => Mathf.Clamp01(dayProgressSeconds / dayLengthSeconds);
         public int CurrentDay { get { return currentDay; } } 
-
+        public float DayLengthSeconds => dayLengthSeconds;
+        
         public UnityEvent dayPassedEvent = new UnityEvent(); // Invoke() at end of day
+
+        public event Action dayPassedSystem;
+
+        void Start()
+        {
+            if (Core.GameManager.Instance != null && Core.GameManager.Instance.Seasons != null)
+            {
+                Core.GameManager.Instance.Seasons.SetDayController(this);
+            }
+        }
+
+        void OnDestroy()
+        {
+            if (Core.GameManager.Instance != null && Core.GameManager.Instance.Seasons != null)
+            {
+                Core.GameManager.Instance.Seasons.SaveTime(dayProgressSeconds, currentDay);
+            }
+        }
+
+        public void RestoreTime(float savedSeconds, int savedDay)
+        {
+            dayProgressSeconds = savedSeconds;
+            currentDay = savedDay;
+            UpdateVisuals();
+        }
 
         public void AdvanceDay()
         {
             Debug.Assert(sunLight, "DayController requires a 'Sun'");
-            if (dayLabel == null) Debug.Log("DayController does not have a label to update");
 
             dayProgressSeconds = 0f; // Reset to start a new day
             currentDay++;
             
-            if (dayLabel)
-            {
-                // Don't do this! It generates garbage (will eventually invoke Garbage Collect)
-                //dayLabel.text="Days: " + currentDay.ToString();
-
-                // Do this instead
-                dayLabel.SetText("Days: {0}", currentDay);                
-            }
-
-            dayPassedEvent.Invoke(); //make announcement to all listeners
+            dayPassedSystem?.Invoke(); //? modifier means only do if not null.
+            dayPassedEvent?.Invoke(); //make announcement to all listeners
         }
 
         public void UpdateVisuals()
@@ -68,5 +85,6 @@ namespace Environment
 
             UpdateVisuals();
         }
+        
     }
 }
