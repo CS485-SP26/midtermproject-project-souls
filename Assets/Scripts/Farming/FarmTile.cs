@@ -3,6 +3,7 @@ using UnityEngine;
 using Environment;
 using System;
 using Core;
+using Quest;
 
 namespace Farming
 {
@@ -31,7 +32,7 @@ namespace Farming
 
         [HideInInspector] public int id = -1;
         private bool isLoading = false;
-
+        
         public void LoadData()
         {
             isLoading = true;
@@ -225,21 +226,13 @@ namespace Farming
                 Debug.Log("Plant is not ready to harvest.");
                 return;
             }
+            
             //see plants value
             int value = harvestable.Harvest();
             Debug.Log("Harvested for " + value);
 
-            // we are adding funds directly rather than selling seeds for now
-            // add funds to player
-            if (FundsManager.Instance != null)
-            {
-                FundsManager.Instance.Add(value);
-                Debug.Log("Added " + value + " to player funds.");
-            }
-            else
-            {
-                Debug.LogWarning("FundsManager instance not found");
-            }    
+            //Adding plants to be sold
+            GameManager.Instance.AddPlants(1);  
 
             //remove the plant from the scene.
             Destroy(currentPlant);

@@ -5,6 +5,7 @@ using System.Collections;
 using UnityEngine.Events;
 using Core;
 using Character;
+using Quest;
 public class TileEvent : MonoBehaviour //this code could definitely be improved, event for when all tiles are wet, refreshes check at the end of the day
 {
     public UnityEvent AllTilesWet = new UnityEvent();
@@ -14,13 +15,11 @@ public class TileEvent : MonoBehaviour //this code could definitely be improved,
     bool questCompleted; //we want to disable the quest if its already been completed
     int wetted = 0; //wetted is how many wet tiles there are
     int goal = -1; //goal is the amount of tiles total, set to -1 so this doesnt match wetted by default
-
         private IEnumerator Start() // IEnumerator Start is called once before the first execution of Update after the MonoBehaviour is created and also lets you set a seconds delay
     {
         //wait until manager exists
         while (manager == null || manager.ConfirmCount() == 0)
             yield return null;
-
         Debug.Assert(manager, "the farm tile manager is missing for tile event!");
         goal = manager.ConfirmCount();
         Debug.Log("TileEvent ready. Goal = " + goal);
@@ -53,7 +52,8 @@ public class TileEvent : MonoBehaviour //this code could definitely be improved,
 
     public void QuestRewardAddFunds() //note: this is called through a button and wont happen naturally
     {
+        QuestObject quest = GameManager.Instance.Quests.currentQuests.Find(q => q.questName == "Get Watering");
         FundsManager.Instance.Add(100);
+        GameManager.Instance.Quests.CompleteQuest(quest);
     }
-
 }

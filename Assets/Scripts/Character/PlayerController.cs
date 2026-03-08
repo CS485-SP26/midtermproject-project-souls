@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.EventSystems;
 using Farming;
 using System.Collections.Generic;
+using Quest;
 namespace Character 
 {
     [RequireComponent(typeof(PlayerInput))]
@@ -10,10 +10,10 @@ namespace Character
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private TileSelector tileSelector;
+        public QuestUI questUI;
         private MovementController moveController;
         private AnimatedController animatedController;
         private PlayerFarming playerFarming;
-
         public IInteractable currentInteractable;
         public bool canMove = true;
 
@@ -51,7 +51,7 @@ namespace Character
             //Debug.Log(waterable);
             playerFarming.AttemptInteraction(tile);
         }
-
+        // For opening UI's
         private void OnOpen(InputValue value)
         {
             if (currentInteractable != null)
@@ -59,7 +59,9 @@ namespace Character
                 currentInteractable.Interact();
                 return;
             }
+            questUI.Open();
         }
+
         private void OnTriggerEnter(Collider other)
         {
             IInteractable interactable = other.GetComponent<IInteractable>();

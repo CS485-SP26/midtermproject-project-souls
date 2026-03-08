@@ -369,6 +369,7 @@ GameObject:
   - component: {fileID: 621266013}
   - component: {fileID: 621266015}
   - component: {fileID: 621266014}
+  - component: {fileID: 621266016}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GameManager
@@ -452,7 +453,64 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SeasonManager
   dayController: {fileID: 0}
-  dateLabel: {fileID: 0}
+  savedDayProgressSeconds: 0
+  savedCurrentDay: 1
+  temperatureCurve:
+    points:
+    - mean: 15
+      stdDev: 3
+      time: 0.125
+    - mean: 30
+      stdDev: 2
+      time: 0.375
+    - mean: 12
+      stdDev: 4
+      time: 0.625
+    - mean: -5
+      stdDev: 5
+      time: 0.875
+  moistureCurve:
+    points:
+    - mean: 15
+      stdDev: 3
+      time: 0.125
+    - mean: 30
+      stdDev: 2
+      time: 0.375
+    - mean: 12
+      stdDev: 4
+      time: 0.625
+    - mean: -5
+      stdDev: 5
+      time: 0.875
+  sunlightCurve:
+    points:
+    - mean: 15
+      stdDev: 3
+      time: 0.125
+    - mean: 30
+      stdDev: 2
+      time: 0.375
+    - mean: 12
+      stdDev: 4
+      time: 0.625
+    - mean: -5
+      stdDev: 5
+      time: 0.875
+--- !u!114 &621266016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621266009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eef6eed80232457eb5b0d3ce0e53ed9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Quest.QuestManager
+  currentQuests: []
+  completedQuests: []
 --- !u!1 &644770500
 GameObject:
   m_ObjectHideFlags: 0
