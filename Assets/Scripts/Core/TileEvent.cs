@@ -11,6 +11,7 @@ public class TileEvent : MonoBehaviour //this code could definitely be improved,
     [SerializeField] FarmTileManager manager; //these need to be serialize fields or else you will get reference object is not set to object error (trying to use null object)
     [SerializeField] PlayerFarming interactCheck; //needed for the same reason as manager
     [SerializeField] private int tileIndex;
+    bool questCompleted; //we want to disable the quest if its already been completed
     int wetted = 0; //wetted is how many wet tiles there are
     int goal = -1; //goal is the amount of tiles total, set to -1 so this doesnt match wetted by default
 
@@ -41,11 +42,12 @@ public class TileEvent : MonoBehaviour //this code could definitely be improved,
 
         //Debug.Log("wetted tiles: " + wetted);
 
-        if(wetted == goal) //if we have as many wet tiles as the goal
+        if(wetted == goal && questCompleted == false) //if we have as many wet tiles as the goal
         {
             AllTilesWet?.Invoke(); //invoke/activate this event
             CancelInvoke(); //cancel all invokes in this script once alltileswet invoke happens                
             wetted = 0;
+            questCompleted = true; //make sure the quest complete notification doesnt show up again after triggering this
         }
     }
 

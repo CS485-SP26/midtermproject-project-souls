@@ -3,6 +3,8 @@ using TMPro; // Important for TextMeshPro
 using UnityEngine.Events;
 using System;
 using Farming;
+using UnityEditor.Toolbars;
+using UnityEditor.Experimental.GraphView;
 
 namespace Environment 
 {
@@ -16,6 +18,9 @@ namespace Environment
         [SerializeField] private float dayProgressSeconds = 0f; // good for debugging from the editor
         [SerializeField] private int currentDay = 1; // Good for debugging from the editor
 
+        struct tellTime { public int hour; public int minute; public int second; public string ampm;} //struct to display the time
+        private tellTime ToD; //ToD = Time of Day
+
         // Properties
         public float DayProgressPercent => Mathf.Clamp01(dayProgressSeconds / dayLengthSeconds);
         public int CurrentDay { get { return currentDay; } } 
@@ -24,6 +29,7 @@ namespace Environment
         public UnityEvent dayPassedEvent = new UnityEvent(); // Invoke() at end of day
 
         public event Action dayPassedSystem;
+        
 
         void Start()
         {
@@ -46,6 +52,25 @@ namespace Environment
             dayProgressSeconds = savedSeconds;
             currentDay = savedDay;
             UpdateVisuals();
+        }
+
+        public string TimeToString()
+        {
+            //am:pm logic, theres probably a better way of doing it
+            if(ToD.hour == 0)
+                { ToD.ampm = "AM"; ToD.hour = 12; } //make this 12:00AM
+            else if(ToD.hour < 12)
+                ToD.ampm = "AM"; //make this 1:00-11:00AM, the hour after is noon (12:00PM)
+            else if(ToD.hour == 12)
+                ToD.ampm = "PM"; //make this noon (12:00PM)
+            else if(ToD.hour > 12) 
+                { ToD.ampm = "PM"; ToD.hour -= 12; } //make this 1:00-11:00PM, reset to 12:00AM afterwards
+
+
+            string finalHour = ToD.hour.ToString().PadLeft(2, '0');
+            string finalMinute = ToD.minute.ToString().PadLeft(2, '0');
+            string finalSecond = ToD.second.ToString().PadLeft(2, '0');
+            return $"{finalHour}:{finalMinute}:{finalSecond} {ToD.ampm}";
         }
 
         public void AdvanceDay()
@@ -78,6 +103,10 @@ namespace Environment
         {
             dayProgressSeconds += Time.deltaTime;
 
+            ToD.hour = (int)GetHour();
+            ToD.minute = 0; //todo
+            ToD.second = 0; //todo
+
             if (dayProgressSeconds >= dayLengthSeconds)
             {
                 AdvanceDay();
@@ -85,6 +114,18 @@ namespace Environment
 
             UpdateVisuals();
         }
+
+        private float GetHour()
+        {
+            //linear mapping using Isak's formula
+            float sunRot = Mathf.Lerp(0f, 360f, DayProgressPercent);
+            float minA = 0; float minB = 0; //A is parameters for the angle of the sun
+            float maxA = 360; float maxB = 24; //B is parameters for hours in a day
+            float value = ((sunRot - minA) * (maxB - minB) / (maxA - minA) + (minB));
+
+            return value;
+        }
+
         
     }
 }

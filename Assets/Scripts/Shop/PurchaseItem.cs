@@ -12,6 +12,7 @@ public class PurchaseItem : MonoBehaviour
             if (GameManager.Instance != null && GameManager.Instance.Seeds != null)
             {
                 GameManager.Instance.Seeds.Add(1);
+                SeedsManager.Instance.Add(1);
             }
         }
     }
