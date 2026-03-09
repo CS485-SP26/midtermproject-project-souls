@@ -44,6 +44,12 @@ namespace Character
         
         private void OnInteract(InputValue value)
         {
+            if (currentInteractable != null)
+            {
+                currentInteractable.Interact();
+                return;
+            }
+
             // Delegate the logic to the farming script
             FarmTile tile = tileSelector.GetSelectedTile(); //you HAVE to make sure the tile selector is set to player (raycaster) in the inspector!
             //Debug.Log(tileSelector.GetSelectedTile().gameObject.name + " recognized for OnInteract");
@@ -54,11 +60,6 @@ namespace Character
         // For opening UI's
         private void OnOpen(InputValue value)
         {
-            if (currentInteractable != null)
-            {
-                currentInteractable.Interact();
-                return;
-            }
             questUI.Open();
         }
 
