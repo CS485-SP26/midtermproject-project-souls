@@ -50,10 +50,25 @@ public class TileEvent : MonoBehaviour //this code could definitely be improved,
         }
     }
 
-    public void QuestRewardAddFunds() //note: this is called through a button and wont happen naturally
+    public void QuestRewardAddFunds() //note: this is called through a button and wont happen naturally // extra bugfixing done with chat
     {
+        if (GameManager.Instance == null || GameManager.Instance.Quests == null)
+        {
+            Debug.LogError("GameManager or QuestManager missing");
+            return;
+        }
+
+
         QuestObject quest = GameManager.Instance.Quests.currentQuests.Find(q => q.questName == "Get Watering");
-        FundsManager.Instance.Add(100);
+
+        if (quest == null)
+        {
+            Debug.LogError("Quest 'Get Watering' not found in currentQuests");
+            return;
+        }
+
+
+        GameManager.Instance.AddFunds(100);
         GameManager.Instance.Quests.CompleteQuest(quest);
     }
 }

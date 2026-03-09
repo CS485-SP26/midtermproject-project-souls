@@ -6,6 +6,19 @@ public class MoneyUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI moneyText;
 
+    private void Start()
+    {
+        if (FundsManager.Instance != null)
+        {
+            FundsManager.Instance.OnFundsChanged += UpdateUI;
+            UpdateUI(FundsManager.Instance.Get());
+        }
+        else
+        {
+            Debug.LogError("FundsManager.Instance is null! Make sure a FundsManager exists in the scene.");
+        }
+    }
+
     private void OnEnable()
     {
         FundsManager.Instance.OnFundsChanged += UpdateUI;
@@ -16,16 +29,11 @@ public class MoneyUI : MonoBehaviour
         FundsManager.Instance.OnFundsChanged -= UpdateUI;
     }
 
-    private void Start()
-    {
-        UpdateUI(FundsManager.Instance.Get());
-    }
-
     private void UpdateUI(int amount)
     {
         if (moneyText)
         {
-            moneyText.SetText($"Money: ${amount}");
+            moneyText.SetText($"Funds: ${amount}");
         }
     }
 }

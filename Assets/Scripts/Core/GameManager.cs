@@ -24,6 +24,9 @@ namespace Core
 
         void Awake()
         {
+            Debug.Log("GameManager on: " + gameObject.name);
+            Debug.Log("SeedsManager found: " + seedsManager);
+
             if (Instance != null && Instance != this)
             {
                 Destroy(gameObject);

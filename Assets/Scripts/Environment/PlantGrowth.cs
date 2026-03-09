@@ -173,7 +173,7 @@ namespace Environment
             }
             
             // Debug the quality multiplier for testing
-            Debug.Log($"Accumulated Quality: {accumulatedQuality}, Samples: {qualitySamples}, Multiplier: {GetQualityMultiplier()}");
+            //Debug.Log($"Accumulated Quality: {accumulatedQuality}, Samples: {qualitySamples}, Multiplier: {GetQualityMultiplier()}");
         }
 
         public bool CanHarvest()

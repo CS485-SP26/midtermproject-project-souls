@@ -14,6 +14,7 @@ namespace Character
         [Header("Dependencies")]
         [SerializeField] private TileSelector tileSelector;
         [SerializeField] private FarmTileManager farmTileManager;
+        [SerializeField] private SeedsManager seedsManager;
         private AnimatedController animatedController;
 
         [Header("Tools & Visuals")]
