@@ -1551,7 +1551,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 936733458958963574, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.07465035
+      value: 0.0019875858
       objectReference: {fileID: 0}
     - target: {fileID: 936733458958963574, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1559,11 +1559,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 936733458958963574, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.096882
+      value: -4.1239586
       objectReference: {fileID: 0}
     - target: {fileID: 936733458958963574, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.70267206
+      value: 0.9992327
       objectReference: {fileID: 0}
     - target: {fileID: 936733458958963574, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1571,7 +1571,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 936733458958963574, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7115139
+      value: -0.039167307
       objectReference: {fileID: 0}
     - target: {fileID: 936733458958963574, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: m_LocalRotation.z
@@ -1583,7 +1583,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 936733458958963574, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -90.716
+      value: -4.489
       objectReference: {fileID: 0}
     - target: {fileID: 936733458958963574, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1601,10 +1601,6 @@ PrefabInstance:
       propertyPath: hoeMesh
       value: 
       objectReference: {fileID: 1066942663620176492, guid: b491eb08a62cb3a4586bf821e6faad8f, type: 3}
-    - target: {fileID: 6765532629996999542, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
-      propertyPath: fishingRod
-      value: 
-      objectReference: {fileID: 919132149155446097, guid: 67d8daa0be01956429bbc5d59ac67f3d, type: 3}
     - target: {fileID: 6765532629996999542, guid: 929bf5e11e8505e4e927a93701c1e513, type: 3}
       propertyPath: tileSelector
       value: 
@@ -2740,7 +2736,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 10}
+  m_AnchoredPosition: {x: 600, y: 10}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &457066885
@@ -3686,7 +3682,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Character.PlayerFarming
   tileSelector: {fileID: 0}
   farmTileManager: {fileID: 2050930286}
-  seedsManager: {fileID: 0}
   waterCan: {fileID: 1630842460}
   gardenHoe: {fileID: 1196997520}
   waterLevelUI: {fileID: 2135513623}
