@@ -29,6 +29,23 @@ namespace Character {
             animator.SetTrigger("Jump");
         }
 
+        public void FishingIdle()
+        {
+            animator.SetBool("IsFishing", true);    
+        }
+
+        public void FishingCast()
+        {
+            animator.SetTrigger("FishingCast");
+        }
+
+
+        public void FishingReel()
+        {
+            animator.SetTrigger("FishingReel");
+        }
+
+
         public void SetTrigger(string name)
         {
             animator.SetTrigger(name);
