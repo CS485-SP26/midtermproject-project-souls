@@ -19,6 +19,9 @@ namespace Character
         [Header("Tools & Visuals")]
         [SerializeField] private GameObject waterCan;
         [SerializeField] private GameObject gardenHoe;
+        [SerializeField] private ToolDurability hoeDurability;
+        [SerializeField] private ToolDurability wateringCanDurability;
+        [SerializeField] private TMP_Text toolBrokenMessage;
 
         [Header("Player Meter Stats")] //!!renamed to include stamina bar!!
         //[SerializeField] private SimpleProgressBar waterLevelBar; //!!potentially destructive removal of simpleprogressbar which we dont use anymore!!
@@ -53,6 +56,9 @@ namespace Character
         [Header("Events")] //added for stamina meter and quest checking
         public UnityEvent interacting = new UnityEvent();
         public UnityEvent staminaDrain = new UnityEvent();
+
+        [Header("Audio")]
+        [SerializeField] private AudioSource toolBreakAudio;
 
         bool busy = false; //determine when the player is currently doing something or not
 
@@ -94,12 +100,24 @@ namespace Character
                 switch (tile.GetCondition)
                 {
                     case FarmTile.Condition.Grass:
+                        if (!hoeDurability.UseTool())
+                        {
+                            ShowToolBroken();
+                            toolBreakAudio?.Play();
+                            return;
+                        }
                         busy = true;
                         animatedController.SetTrigger("Till");
                         tile.Interact();
                         StartCoroutine(ClearBusyAfterAnimation("Till"));
                         break;
                     case FarmTile.Condition.Tilled: 
+                        if (!wateringCanDurability.UseTool())
+                        {
+                            ShowToolBroken();
+                            toolBreakAudio?.Play();
+                            return;
+                        }
                         if(waterLevel >= waterPerUse)
                         { 
                             busy = true;
@@ -223,6 +241,21 @@ namespace Character
         {
             if (index >= 0 && index < plantPrefabs.Length)
                 selectedPlantIndex = index;
+        }
+
+        void ShowToolBroken()
+        {
+            if (toolBrokenMessage == null) return;
+
+            toolBrokenMessage.gameObject.SetActive(true);
+            StartCoroutine(HideToolBroken());
+        }
+
+        IEnumerator HideToolBroken()
+        {
+            yield return new WaitForSeconds(2f);
+            toolBrokenMessage.gameObject.SetActive(false);
+
         }
     }
 }
