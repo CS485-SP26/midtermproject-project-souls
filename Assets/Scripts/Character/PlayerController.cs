@@ -14,14 +14,21 @@ namespace Character
         private MovementController moveController;
         private AnimatedController animatedController;
         private PlayerFarming playerFarming;
+        private PlayerFishing playerFishing;
         public IInteractable currentInteractable;
         public bool canMove = true;
+
+        [SerializeField] public GameObject fishingRod;
 
         void Start()
         {
             moveController = GetComponent<MovementController>();
             animatedController = GetComponent<AnimatedController>();
             playerFarming = GetComponent<PlayerFarming>();
+            playerFishing = GetComponent<PlayerFishing>();
+
+            //hide fishing rod on start
+            fishingRod.SetActive(false);
 
             Debug.Assert(moveController, "PlayerController requires a MovementController");
             Debug.Assert(playerFarming, "PlayerController requires PlayerFarming script");
@@ -30,7 +37,12 @@ namespace Character
 
         public void OnMove(InputValue inputValue)
         {
-            if(!canMove) {return;}; // disables player movement for inside UI menus
+            if(!canMove)
+            {
+                moveController.Move(Vector2.zero);
+                return;
+            }; // disables player movement for inside UI menus --> modified to still allow interaction, specifically for fishing
+
             Vector2 inputVector = inputValue.Get<Vector2>();
             moveController.Move(inputVector);
         }
@@ -49,16 +61,32 @@ namespace Character
             //Debug.Log(tileSelector.GetSelectedTile().gameObject.name + " recognized for OnInteract");
             List<IWaterable> waterable = tileSelector.GetSelectionOfType<IWaterable>();
             //Debug.Log(waterable);
-            playerFarming.AttemptInteraction(tile);
+
+            // if interacting with a tile, try farming
+            if (tile != null)
+            {
+                playerFarming.AttemptInteraction(tile);
+                return;
+            }
+
+            // otherwise, try fishing
+            if (playerFishing != null)
+            {
+                playerFishing.TryFish();
+            }
+
         }
+
+
         // For opening UI's
         private void OnOpen(InputValue value)
         {
             if (currentInteractable != null)
             {
-                currentInteractable.Interact();
+                currentInteractable.Interact(gameObject);
                 return;
             }
+
             questUI.Open();
         }
 
